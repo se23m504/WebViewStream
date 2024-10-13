@@ -18,23 +18,20 @@ UnityGenerated/
 Assets/AssetStoreTools*
 /[Uu]ser[Ss]ettings/
 
-#Unity UWP generated (UPW folder might be partialy includet in the future see Microsoft/GalaxyExplorer/)
 UWP/
 project.json
 project.lock.json
 
-#Foler for generated UWP App to export to hololens
 App/
 
-# Unity3D Generated File On Crash Reports
 sysinfo.txt
 
-# Unity3D generated meta files (Monodevelop)
 *.pidb.meta
 
-# Builds
 *.apk
 *.unitypackage
+
+/Packages/MixedReality
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
