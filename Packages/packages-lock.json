@@ -1,37 +1,41 @@
 {
   "dependencies": {
     "com.microsoft.mixedreality.openxr": {
-      "version": "file:MixedReality/com.microsoft.mixedreality.openxr-1.11.1.tgz",
+      "version": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.openxr",
       "depth": 0,
-      "source": "local-tarball",
+      "source": "git",
       "dependencies": {
         "com.unity.xr.arfoundation": "4.1.7",
         "com.unity.xr.management": "4.2.0",
         "com.unity.xr.openxr": "1.7.0",
         "com.unity.xr.core-utils": "2.1.0"
-      }
+      },
+      "hash": "69dcce681c41a6c2a83bc2d7336afccf3e8a6ce4"
     },
     "com.microsoft.mixedreality.toolkit.foundation": {
-      "version": "file:MixedReality/com.microsoft.mixedreality.toolkit.foundation-2.8.3.tgz",
+      "version": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.toolkit.foundation",
       "depth": 0,
-      "source": "local-tarball",
+      "source": "git",
       "dependencies": {
         "com.microsoft.mixedreality.toolkit.standardassets": "2.8.3"
-      }
+      },
+      "hash": "69dcce681c41a6c2a83bc2d7336afccf3e8a6ce4"
     },
     "com.microsoft.mixedreality.toolkit.standardassets": {
-      "version": "file:MixedReality/com.microsoft.mixedreality.toolkit.standardassets-2.8.3.tgz",
+      "version": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.toolkit.standardassets",
       "depth": 0,
-      "source": "local-tarball",
+      "source": "git",
       "dependencies": {
         "com.unity.textmeshpro": "2.1.4"
-      }
+      },
+      "hash": "69dcce681c41a6c2a83bc2d7336afccf3e8a6ce4"
     },
     "com.microsoft.mixedreality.webview.unity": {
-      "version": "file:MixedReality/com.microsoft.mixedreality.webview.unity-0.22.7-pre.1.tgz",
+      "version": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.webview.unity",
       "depth": 0,
-      "source": "local-tarball",
-      "dependencies": {}
+      "source": "git",
+      "dependencies": {},
+      "hash": "69dcce681c41a6c2a83bc2d7336afccf3e8a6ce4"
     },
     "com.unity.collab-proxy": {
       "version": "2.3.1",

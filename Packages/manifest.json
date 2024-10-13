@@ -1,8 +1,9 @@
 {
   "dependencies": {
-    "com.microsoft.mixedreality.openxr": "file:MixedReality/com.microsoft.mixedreality.openxr-1.11.1.tgz",
-    "com.microsoft.mixedreality.toolkit.foundation": "file:MixedReality/com.microsoft.mixedreality.toolkit.foundation-2.8.3.tgz",
-    "com.microsoft.mixedreality.toolkit.standardassets": "file:MixedReality/com.microsoft.mixedreality.toolkit.standardassets-2.8.3.tgz",
+    "com.microsoft.mixedreality.openxr": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.openxr",
+    "com.microsoft.mixedreality.toolkit.foundation": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.toolkit.foundation",
+    "com.microsoft.mixedreality.toolkit.standardassets": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.toolkit.standardassets",
+    "com.microsoft.mixedreality.webview.unity": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.webview.unity",
     "com.unity.collab-proxy": "2.3.1",
     "com.unity.feature.development": "1.0.1",
     "com.unity.ide.rider": "3.0.28",
@@ -44,7 +45,6 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.microsoft.mixedreality.webview.unity": "file:MixedReality/com.microsoft.mixedreality.webview.unity-0.22.7-pre.1.tgz"
+    "com.unity.modules.xr": "1.0.0"
   }
 }
