@@ -599,7 +599,6 @@ GameObject:
   m_Component:
   - component: {fileID: 704152376}
   - component: {fileID: 704152377}
-  - component: {fileID: 704152378}
   m_Layer: 0
   m_Name: ConfigurePointer
   m_TagString: Untagged
@@ -634,38 +633,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ed9795fceba7ff40ba7002e18a35674, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &704152378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 704152375}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 45b3eff181cc4244a8a14234096e62fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  isFocusRequired: 0
-  keywords:
-  - keyword: Pointer
-    response:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 704152377}
-          m_TargetAssemblyTypeName: ConfigurePointer, Assembly-CSharp
-          m_MethodName: ToggleHandRayPointer
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-  persistentKeywords: 0
-  speechConfirmationTooltipPrefab: {fileID: 8046114618238072051, guid: 271778f6c957b524981067a81d238394, type: 3}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1935,6 +1902,7 @@ GameObject:
   - component: {fileID: 1555317778}
   - component: {fileID: 1555317777}
   - component: {fileID: 1555317776}
+  - component: {fileID: 1555317780}
   m_Layer: 5
   m_Name: FirstCanvas
   m_TagString: Untagged
@@ -2123,6 +2091,20 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1555317780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1555317770}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcaf896491074042b7ed7684454a412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsToReceive: 0
+  debounceThreshold: 0.01
 --- !u!1001 &1725194923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2685,6 +2667,22 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+  - keyword: Reload
+    response:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 491721038}
+          m_TargetAssemblyTypeName: EndpointLoader, Assembly-CSharp
+          m_MethodName: ReloadEndpoints
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
   persistentKeywords: 0
   speechConfirmationTooltipPrefab: {fileID: 8046114618238072051, guid: 271778f6c957b524981067a81d238394, type: 3}
 --- !u!21 &2059116078
@@ -2809,6 +2807,7 @@ GameObject:
   - component: {fileID: 2137857641}
   - component: {fileID: 2137857640}
   - component: {fileID: 2137857639}
+  - component: {fileID: 2137857647}
   m_Layer: 5
   m_Name: SecondCanvas
   m_TagString: Untagged
@@ -2997,3 +2996,17 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &2137857647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2137857637}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2fcaf896491074042b7ed7684454a412, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventsToReceive: 0
+  debounceThreshold: 0.01
