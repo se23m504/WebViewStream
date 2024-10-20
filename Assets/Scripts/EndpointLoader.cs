@@ -4,14 +4,12 @@ using UnityEngine.Networking;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-// using TMPro;
 using Microsoft.MixedReality.WebView;
 
 public class EndpointLoader : MonoBehaviour
 {
     public WebView webView1;
     public WebView webView2;
-    // public Button ReloadButton;
 
     private const string apiUrl = "http://windows.local:5000/api/endpoints";
     private const string defaultEndpoint1 = "http://windows.local:8100/mystream/";
@@ -19,7 +17,6 @@ public class EndpointLoader : MonoBehaviour
 
     private void Start()
     {
-        // ReloadButton.onClick.AddListener(() => StartCoroutine(LoadEndpoints()));
         StartCoroutine(LoadEndpoints());
     }
 
@@ -48,13 +45,17 @@ public class EndpointLoader : MonoBehaviour
         {
             Debug.LogError("Parsed endpoints are empty. Using default endpoints");
             UseDefaultEndpoints();
-            // yield return null;
         }
         else
         {
             webView1.Load(endpoints[0].url ?? defaultEndpoint1);
             webView2.Load(endpoints[1].url ?? defaultEndpoint2);
         }
+    }
+
+    public void ReloadEndpoints()
+    {
+        StartCoroutine(LoadEndpoints());
     }
 
     private void UseDefaultEndpoints()
