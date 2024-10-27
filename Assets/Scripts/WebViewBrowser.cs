@@ -6,7 +6,6 @@ using System;
 
 public class WebViewBrowser : MonoBehaviour
 {
-    public Button GoButton;
     public TMP_InputField URLField;
 
     private void Start()
@@ -14,7 +13,7 @@ public class WebViewBrowser : MonoBehaviour
         var webViewComponent = gameObject.GetComponent<WebView>();
         webViewComponent.GetWebViewWhenReady((IWebView webView) =>
         {
-            GoButton.onClick.AddListener(() => webView.Load(new Uri(URLField.text)));
+            URLField.onSubmit.AddListener((text) => LoadUrl(webView));
 
             webView.Navigated += OnNavigated;
 
@@ -28,5 +27,17 @@ public class WebViewBrowser : MonoBehaviour
     private void OnNavigated(string path)
     {
         URLField.text = path;
+    }
+
+    private void LoadUrl(IWebView webView)
+    {
+        if (Uri.TryCreate(URLField.text, UriKind.Absolute, out Uri uriResult))
+        {
+            webView.Load(uriResult);
+        }
+        else
+        {
+            Debug.LogWarning("Invalid URL entered.");
+        }
     }
 }

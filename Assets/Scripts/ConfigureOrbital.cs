@@ -12,6 +12,7 @@ public class ConfigureOrbital : MonoBehaviour
 
     private Orbital orbital1;
     private Orbital orbital2;
+
     private SolverHandler solverHandler1;
     private SolverHandler solverHandler2;
 
@@ -50,9 +51,8 @@ public class ConfigureOrbital : MonoBehaviour
             if (orbital.enabled)
             {
                 Vector3 headPosition = Camera.main.transform.position;
-                // Quaternion headRotation = Camera.main.transform.rotation;
-                // Vector3 relativePosition = Quaternion.Inverse(headRotation) * (orbital.transform.position - headPosition);
-                Vector3 relativePosition = (orbital.transform.position - headPosition);
+                Quaternion headRotation = Camera.main.transform.rotation;
+                Vector3 relativePosition = Quaternion.Inverse(headRotation) * (orbital.transform.position - headPosition);
 
                 orbital.LocalOffset = relativePosition;
 
