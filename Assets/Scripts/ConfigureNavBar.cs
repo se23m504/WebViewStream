@@ -31,14 +31,14 @@ public class ConfigureNavBar : MonoBehaviour
 
         if (boxCollider1 != null)
         {
-            boxCollider1.size = new Vector3(boxCollider1.size.x, isVisible ? 400 : 300, boxCollider1.size.z);
-            boxCollider1.center = new Vector3(isVisible ? 0: -16, 0, 0);
+            boxCollider1.size = new Vector3(boxCollider1.size.x, isVisible ? 400 : 370, boxCollider1.size.z);
+            boxCollider1.center = new Vector3(0, isVisible ? 0: -16, 0);
         }
 
         if (boxCollider2 != null)
         {
-            boxCollider2.size = new Vector3(boxCollider1.size.x, isVisible ? 400 : 300, boxCollider2.size.z);
-            boxCollider2.center = new Vector3(isVisible ? 0: -16, 0, 0);
+            boxCollider2.size = new Vector3(boxCollider2.size.x, isVisible ? 400 : 370, boxCollider2.size.z);
+            boxCollider2.center = new Vector3(0, isVisible ? 0: -16, 0);
         }
     }
 }
