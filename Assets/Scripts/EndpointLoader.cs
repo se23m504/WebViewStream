@@ -16,10 +16,41 @@ public class EndpointLoader : MonoBehaviour
     private string apiUrl = "http://windows.loca:5000/api/endpoints";
     private const string defaultEndpoint1 = "http://windows.local:8100/mystream/";
     private const string defaultEndpoint2 = "http://windows.local:8200/mystream/";
+    private bool defaultEndpoint1Loaded = false;
+    private bool defaultEndpoint2Loaded = false;
 
     private void Start()
     {
         StartCoroutine(LoadEndpoints());
+    }
+
+    private IEnumerator TryLoadingFromDefaultEndpoints()
+    {
+        using (UnityWebRequest request = UnityWebRequest.Get(defaultEndpoint1))
+        {
+            yield return request.SendWebRequest();
+            ProcessEndpointResponse(request, webView1, defaultEndpoint1, ref defaultEndpoint1Loaded);
+        }
+
+        using (UnityWebRequest request = UnityWebRequest.Get(defaultEndpoint2))
+        {
+            yield return request.SendWebRequest();
+            ProcessEndpointResponse(request, webView2, defaultEndpoint2, ref defaultEndpoint2Loaded);
+        }
+    }
+
+    private void ProcessEndpointResponse(UnityWebRequest request, WebView webView, string endpoint, ref bool loadedFlag)
+    {
+        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        {
+            Debug.LogError($"Error loading from {endpoint}: {request.error}");
+        }
+        else
+        {
+            Debug.Log($"Loaded from {endpoint} successfully.");
+            webView.Load(endpoint);
+            loadedFlag = true;
+        }
     }
 
     private IEnumerator LoadEndpoints()
@@ -34,6 +65,23 @@ public class EndpointLoader : MonoBehaviour
         {
             Debug.LogWarning($"Error loading endpoints: {request.error}");
 
+            if (triedMulticast)
+            {
+                Debug.LogError("Multicast also failed");
+                yield break;
+            }
+
+            Debug.LogWarning("Trying to load from default endpoints");
+            yield return StartCoroutine(TryLoadingFromDefaultEndpoints());
+        }
+
+        if (defaultEndpoint1Loaded || defaultEndpoint2Loaded)
+        {
+            Debug.Log("At least one default endpoint loaded successfully. No need for multicast or endpoints.");
+            yield break;
+        }
+        else if (!triedMulticast)
+        {
             StartListeningForMulticast();
             yield break;
         }
@@ -47,7 +95,6 @@ public class EndpointLoader : MonoBehaviour
         if (endpoints.Length == 0)
         {
             Debug.LogError("Parsed endpoints are empty.");
-            StartListeningForMulticast();
         }
         else
         {
@@ -58,18 +105,12 @@ public class EndpointLoader : MonoBehaviour
 
     private void StartListeningForMulticast()
     {
-        if (triedMulticast)
-        {
-            Debug.LogWarning("Multicast also failed. Using default endpoints.");
-            UseDefaultEndpoints();
-            return;
-        }
-
         Debug.Log("Starting multicast discovery for endpoints");
 
         triedMulticast = true;
         serviceDiscovery.StartListening((ipAddress, port) =>
         {
+            Debug.Log($"Received multicast message: {ipAddress}:{port}");
             apiUrl = $"http://{ipAddress}:{port}/api/endpoints";
             StartCoroutine(LoadEndpoints());
         });
