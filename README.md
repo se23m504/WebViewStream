@@ -7,7 +7,7 @@ WebView is a Unity-based HoloLens 2 application for high-quality, low-latency We
 - MRTK-Native: Built on MRTK for optimized HoloLens 2 functionality.
 - Optimized performance: Configured and fine-tuned for smooth, low-latency streaming on the HoloLens 2.
 - WebRTC-based streaming: Uses WebRTC for low-latency, high-quality streaming.
-- Dynamic endpoint management: Reads streaming endpoints from a REST API (GetEndpoints)[https://github.com/se23m504/GetEndpoints], simplifying endpoint updates without typing long URLs directly on the HoloLens.
+- Dynamic endpoint management: Reads streaming endpoints from a REST API [GetEndpoints](https://github.com/se23m504/GetEndpoints), simplifying endpoint updates without typing long URLs directly on the HoloLens.
 - Extendable streaming capacity: Supports two streams by default and can scale up, limited only by HoloLens 2's hardware.
 - Hand menu and speech commands: Offers an intuitive `HandMenu` and voice control for hands-free operation.
 
@@ -21,9 +21,11 @@ WebView is a Unity-based HoloLens 2 application for high-quality, low-latency We
 
 - Platform: HoloLens 2 (UWP)
 - Language: C# (Unity)
-- Required Packages:
-    - Mixed Reality Toolkit (MRTK2)
-    - Microsoft WebView for Unity
+- Required packages:
+    - com.microsoft.mixedreality.openxr
+    - com.microsoft.mixedreality.toolkit.foundation
+    - com.microsoft.mixedreality.toolkit.standardassets
+    - com.microsoft.mixedreality.webview.unity
 
 Note: Install dependencies from my (MixedReality)[https://github.com/se23m504/mixedreality] repository. Only use the specific libraries and versions hosted there, as they have been patched for this project's requirements. Using different versions may lead to errors and compatibility issues.
 
