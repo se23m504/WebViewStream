@@ -11,7 +11,7 @@ public class EndpointLoader : MonoBehaviour
     public WebView webView1;
     public WebView webView2;
 
-    private const string apiUrl = "http://windows.local:5000/api/endpoints";
+    private string apiUrl = "http://windows.local:5000/api/endpoints";
     private const string defaultEndpoint1 = "http://windows.local:8100/mystream/";
     private const string defaultEndpoint2 = "http://windows.local:8200/mystream/";
 
@@ -62,6 +62,15 @@ public class EndpointLoader : MonoBehaviour
     {
         webView1.Load(defaultEndpoint1);
         webView2.Load(defaultEndpoint2);
+    }
+
+    public void UpdateApiUrl(string newApiUrl)
+    {
+        if (!string.IsNullOrEmpty(newApiUrl))
+        {
+            Debug.Log($"Updating API URL to {newApiUrl}");
+            apiUrl = newApiUrl;
+        }
     }
 
     [Serializable]
