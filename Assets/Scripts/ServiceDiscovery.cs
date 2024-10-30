@@ -3,22 +3,22 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 
 public class ServiceDiscovery : MonoBehaviour
 {
-    public EndpointLoader endpointLoader;
-
     private UdpClient udpClient;
-    private const int multicastPort = 5353;
+    private Action<string, string> action;
+
+    private string receivedIp;
+    private string receivedPort;
+    private bool messageReceived = false;
+
     private const string multicastAddress = "224.0.0.251";
+    private const int multicastPort = 5353;
 
-    private void Start()
-    {
-        // StartListening();
-    }
-
-    private void StartListening()
+    public void StartListening(Action<string, string> action)
     {
         try
         {
@@ -26,6 +26,8 @@ public class ServiceDiscovery : MonoBehaviour
             udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
             udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, multicastPort));
             udpClient.JoinMulticastGroup(IPAddress.Parse(multicastAddress));
+
+            this.action = action;
 
             Debug.Log("Listening for service announcements...");
 
@@ -39,6 +41,11 @@ public class ServiceDiscovery : MonoBehaviour
 
     private void OnReceive(IAsyncResult result)
     {
+        if (udpClient == null)
+        {
+            return;
+        }
+
         try
         {
             IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, multicastPort);
@@ -51,10 +58,16 @@ public class ServiceDiscovery : MonoBehaviour
             if (parts.Length == 3 && IPAddress.TryParse(parts[1], out IPAddress ip))
             {
                 int port = int.Parse(parts[2]);
-                ConnectToService(ip.ToString(), port);
-            }
+                receivedIp = ip.ToString();
+                receivedPort = port.ToString();
+                messageReceived = true;
 
-            // udpClient.BeginReceive(OnReceive, null);
+                StopListening();
+            }
+            else
+            {
+                udpClient?.BeginReceive(OnReceive, null);
+            }
         }
         catch (Exception ex)
         {
@@ -62,16 +75,25 @@ public class ServiceDiscovery : MonoBehaviour
         }
     }
 
-    private void ConnectToService(string ipAddress, int port)
+    private void Update()
     {
-        Debug.Log($"Connecting to service at {ipAddress}:{port}");
-        endpointLoader.UpdateApiUrl($"http://{ipAddress}:{port}/api/endpoints");
+        if (messageReceived)
+        {
+            action?.Invoke(receivedIp, receivedPort);
+            messageReceived = false;
+        }
     }
 
     private void OnApplicationQuit()
     {
+        StopListening();
+    }
+
+    private void StopListening()
+    {
         udpClient?.DropMulticastGroup(IPAddress.Parse(multicastAddress));
         udpClient?.Close();
+        udpClient = null;
     }
 }
 

@@ -1846,6 +1846,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   webView1: {fileID: 323128546}
   webView2: {fileID: 781542341}
+  serviceDiscovery: {fileID: 1389755618}
 --- !u!1 &504187403
 GameObject:
   m_ObjectHideFlags: 0
@@ -4827,7 +4828,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c3ce81ebd33ef3d46b8bc545525b82fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  endpointLoader: {fileID: 491721038}
 --- !u!1 &1517812034
 GameObject:
   m_ObjectHideFlags: 0
