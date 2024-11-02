@@ -13,7 +13,7 @@ public class EndpointLoader : MonoBehaviour
     public ServiceDiscovery serviceDiscovery;
 
     private bool triedMulticast = false;
-    private string apiUrl = "http://windows.loca:5000/api/endpoints";
+    private string apiUrl = "http://windows.loca:5000/api/endpoints"; // Typo on purpose
     private const string defaultEndpoint1 = "http://windows.local:8100/mystream/";
     private const string defaultEndpoint2 = "http://windows.local:8200/mystream/";
     private bool defaultEndpoint1Loaded = false;
