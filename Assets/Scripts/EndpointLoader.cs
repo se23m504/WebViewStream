@@ -11,6 +11,7 @@ public class EndpointLoader : MonoBehaviour
     public WebView webView1;
     public WebView webView2;
     public ServiceDiscovery serviceDiscovery;
+    public ServicesListPopulator servicesListPopulator;
 
     private bool triedMulticast = false;
     private string apiUrl = "http://windows.loca:5000/api/endpoints"; // Typo on purpose
@@ -18,6 +19,7 @@ public class EndpointLoader : MonoBehaviour
     private const string defaultEndpoint2 = "http://windows.local:8200/mystream/";
     private bool defaultEndpoint1Loaded = false;
     private bool defaultEndpoint2Loaded = false;
+    private List<MdnsService> availableServices = new List<MdnsService>();
 
     private void Start()
     {
@@ -108,12 +110,27 @@ public class EndpointLoader : MonoBehaviour
         Debug.Log("Starting multicast discovery for endpoints");
 
         triedMulticast = true;
-        serviceDiscovery.StartListening((ipAddress, port) =>
+        serviceDiscovery.StartListening((service) =>
         {
-            Debug.Log($"Received multicast message: {ipAddress}:{port}");
-            apiUrl = $"http://{ipAddress}:{port}/api/endpoints";
-            StartCoroutine(LoadEndpoints());
+            Debug.Log($"Received multicast message: {service.Host}");
+            availableServices.Add(service);
+            AddServiceToTable(service);
         });
+    }
+
+    private void AddServiceToTable(MdnsService service)
+    {
+        Debug.Log($"Adding service to table: {service.Host}");
+        servicesListPopulator.AddItemFromService(service, () =>
+        {
+            ChangeApiUrl($"http://{service.Host}:{service.Port}{service.Path}");
+        });
+    }
+
+    public void ChangeApiUrl(string newUrl)
+    {
+        apiUrl = newUrl;
+        StartCoroutine(LoadEndpoints());
     }
 
     public void ReloadEndpoints()

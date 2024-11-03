@@ -10,20 +10,19 @@ using UnityEngine;
 public class ServiceDiscovery : MonoBehaviour
 {
     private UdpClient udpClient;
-    private Action<string, string> action;
+    private Action<MdnsService> action;
 
     private string receivedIp;
     private string receivedPort;
     private string receivedPath;
     private string receivedHost;
-    private bool messageReceived = false;
 
     private const string multicastAddress = "224.0.0.251";
     private const int multicastPort = 5353;
 
     public List<MdnsService> discoveredServices = new List<MdnsService>();
 
-    public void StartListening(Action<string, string> action)
+    public void StartListening(Action<MdnsService> action)
     {
         try
         {
@@ -107,21 +106,22 @@ public class ServiceDiscovery : MonoBehaviour
             byte[] receivedBytes = udpClient.EndReceive(result, ref remoteEndPoint);
 
             ushort flags = BitConverter.ToUInt16(new byte[] { receivedBytes[3], receivedBytes[2] }, 0);
-            Debug.Log($"Flags: {flags:X2}");
+            // Debug.Log($"Flags: {flags:X2}");
             if (flags == 0x0100) // Standard query
             {
-                Debug.Log("Ignoring non-response packet");
+                // Debug.Log("Ignoring non-response packet");
                 udpClient?.BeginReceive(OnReceive, null);
                 return;
             }
 
-            Debug.Log($"Received message: {receivedBytes} from {remoteEndPoint}");
+            // Debug.Log($"Received message: {receivedBytes} from {remoteEndPoint}");
             ParseMdnsResponse(receivedBytes);
 
             if (receivedIp != null && receivedPort != null)
             {
-                // messageReceived = true;
                 // StopListening();
+                MdnsService currentService = new MdnsService(receivedIp, int.Parse(receivedPort), receivedPath, receivedHost);
+                /*
                 MdnsService currentService = new MdnsService
                 {
                     IpAddress = receivedIp,
@@ -129,21 +129,17 @@ public class ServiceDiscovery : MonoBehaviour
                     Path = receivedPath,
                     Host = receivedHost
                 };
+                */                
                 discoveredServices.Add(currentService);
-                Debug.Log($"Added service: {currentService.IpAddress}:{currentService.Port}, " +
-                    $"{currentService.Path}, {currentService.Host}");
+                Debug.Log($"Added service: http://{currentService.Host}:{currentService.Port}{currentService.Path}");
                 receivedIp = null;
                 receivedPort = null;
                 receivedPath = null;
                 receivedHost = null;
-                // receivedIp = receivedHost = receivedPort = receivedPath = null;
+
+                // action?.Invoke(currentService);
             }
-            /*
-            else
-            {
-                udpClient?.BeginReceive(OnReceive, null);
-            }
-            */
+
             udpClient?.BeginReceive(OnReceive, null);
         }
         catch (Exception ex)
@@ -159,7 +155,7 @@ public class ServiceDiscovery : MonoBehaviour
         ushort answerRRs = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 6));
         ushort additionalRRs = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 10));
            
-        Debug.Log($"Questions: {questions}, Answer RRs: {answerRRs}, Additional RRs: {additionalRRs}");
+        // Debug.Log($"Questions: {questions}, Answer RRs: {answerRRs}, Additional RRs: {additionalRRs}");
 
         for (int i = 0; i < questions; i++)
         {
@@ -219,7 +215,7 @@ public class ServiceDiscovery : MonoBehaviour
             if (txtData.Contains("path"))
             {
                 receivedPath = txtData.Split('=')[1];
-                Debug.Log($"Received path: {receivedPath}");
+                // Debug.Log($"Received path: {receivedPath}");
             }
         }
         else if (recordType == 47) // NSEC Record
@@ -277,13 +273,14 @@ public class ServiceDiscovery : MonoBehaviour
 
     private void Update()
     {
-        if (messageReceived)
+        if (discoveredServices.Count > 0)
         {
-            Debug.Log($"Invoking action with: {receivedIp}:{receivedPort}");
-            action?.Invoke(receivedIp, receivedPort);
-            messageReceived = false;
-            receivedIp = null;
-            receivedPort = null;
+            foreach (MdnsService service in discoveredServices)
+            {
+                Debug.Log($"Invoking action with: {service}");
+                action?.Invoke(service);
+            }
+            discoveredServices.Clear();
         }
     }
 
@@ -299,12 +296,12 @@ public class ServiceDiscovery : MonoBehaviour
         udpClient = null;
     }
 
-    public class MdnsService
+/*    public class MdnsService
     {
         public string IpAddress { get; set; }
         public int Port { get; set; }
         public string Path { get; set; }
         public string Host { get; set; }
     }
-}
+*/}
 
