@@ -6,7 +6,8 @@ using System;
 
 public class WebViewBrowser : MonoBehaviour
 {
-    public TMP_InputField URLField;
+    [SerializeField]
+    private TMP_InputField URLField;
 
     private void Start()
     {

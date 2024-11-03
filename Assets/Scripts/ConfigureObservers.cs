@@ -8,7 +8,7 @@ public class ConfigureObservers : MonoBehaviour
 {
     private IMixedRealitySpatialAwarenessSystem spatialAwarenessSystem;
 
-    void Start()
+    private void Start()
     {
         spatialAwarenessSystem = MixedRealityToolkit.Instance.GetService<IMixedRealitySpatialAwarenessSystem>();
 

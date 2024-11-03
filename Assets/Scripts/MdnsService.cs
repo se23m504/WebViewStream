@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 public class MdnsService
 {
-    public string IpAddress { get; set; }
-    public int Port { get; set; }
-    public string Path { get; set; }
-    public string Host { get; set; }
+    public string IpAddress { get; }
+    public int Port { get; }
+    public string Path { get; }
+    public string Host { get; }
 
     public MdnsService(string ipAddress, int port, string path, string host)
     {

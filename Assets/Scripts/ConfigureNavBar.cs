@@ -6,11 +6,17 @@ using TMPro;
 
 public class ConfigureNavBar : MonoBehaviour
 {
-    public GameObject canvas1;
-    public GameObject canvas2;
+    [SerializeField]
+    private GameObject canvas1;
 
-    public GameObject addressField1;
-    public GameObject addressField2;
+    [SerializeField]
+    private GameObject canvas2;
+
+    [SerializeField]
+    private GameObject addressField1;
+
+    [SerializeField]
+    private GameObject addressField2;
 
     private BoxCollider boxCollider1;
     private BoxCollider boxCollider2;

@@ -8,10 +8,17 @@ using Microsoft.MixedReality.WebView;
 
 public class EndpointLoader : MonoBehaviour
 {
-    public WebView webView1;
-    public WebView webView2;
-    public ServiceDiscovery serviceDiscovery;
-    public ServicesListPopulator servicesListPopulator;
+    [SerializeField]
+    private WebView webView1;
+
+    [SerializeField]
+    private WebView webView2;
+
+    [SerializeField]
+    private ServiceDiscovery serviceDiscovery;
+
+    [SerializeField]
+    private ServicesListPopulator servicesListPopulator;
 
     private bool triedMulticast = false;
     private string apiUrl = "http://windows.loca:5000/api/endpoints"; // Typo on purpose
@@ -124,14 +131,9 @@ public class EndpointLoader : MonoBehaviour
     {
         servicesListPopulator.AddItemFromService(service, () =>
         {
-            ChangeApiUrl($"http://{service.Host}:{service.Port}{service.Path}");
+            apiUrl = $"http://{service.Host}:{service.Port}{service.Path}";
+            StartCoroutine(LoadEndpoints());
         });
-    }
-
-    public void ChangeApiUrl(string newUrl)
-    {
-        apiUrl = newUrl;
-        StartCoroutine(LoadEndpoints());
     }
 
     public void ReloadEndpoints()

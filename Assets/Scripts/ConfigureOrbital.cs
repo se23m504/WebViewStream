@@ -7,8 +7,11 @@ using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
 
 public class ConfigureOrbital : MonoBehaviour
 {
-    public GameObject canvas1;
-    public GameObject canvas2;
+    [SerializeField]
+    private GameObject canvas1;
+
+    [SerializeField]
+    private GameObject canvas2;
 
     // public List<GameObject> canvases;
 
