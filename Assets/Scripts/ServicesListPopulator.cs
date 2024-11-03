@@ -16,6 +16,8 @@ public class ServicesListPopulator : MonoBehaviour
     [SerializeField]
     private GridObjectCollection gridObjectCollection;
 
+    private bool isVisible = true;
+
     public void AddItemFromService(MdnsService service, Action action)
     {
         GameObject itemInstance = Instantiate(dynamicItem, gridObjectCollection.transform);
@@ -29,8 +31,20 @@ public class ServicesListPopulator : MonoBehaviour
         {
             Debug.Log($"Clicked on service: {service.Host}");
             action.Invoke();
+            ToggleVisibility();
         });
 
         gridObjectCollection.UpdateCollection();
+        scrollView.UpdateContent();
+    }
+
+    public void ToggleVisibility()
+    {
+        isVisible = !isVisible;
+
+        foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
+        {
+            renderer.enabled = isVisible;
+        }
     }
 }
