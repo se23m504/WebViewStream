@@ -1,6 +1,7 @@
 using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
@@ -17,19 +18,73 @@ public class ServiceDiscovery : MonoBehaviour
     private string receivedPath;
     private string receivedHost;
 
+    private IPAddress defaultIP;
+
     private const string multicastAddress = "224.0.0.251";
     private const int multicastPort = 5353;
 
     private Queue<MdnsService> serviceQueue = new Queue<MdnsService>();
 
+    private IPAddress GetDefaultInterfaceIP()
+    {
+        foreach (NetworkInterface ni in NetworkInterface.GetAllNetworkInterfaces())
+        {
+            if (ni.OperationalStatus == OperationalStatus.Up)
+            {
+                var ipProps = ni.GetIPProperties();
+                if (ipProps.GatewayAddresses.Count > 0)
+                {
+                    foreach (UnicastIPAddressInformation ip in ipProps.UnicastAddresses)
+                    {
+                        if (ip.Address.AddressFamily == AddressFamily.InterNetwork)
+                        {
+                            return ip.Address;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private List<IPAddress> GetRoutableLocalIPs()
+    {
+        List<IPAddress> localIPs = new List<IPAddress>();
+
+        foreach (IPAddress local in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
+        {
+            if (local.AddressFamily == AddressFamily.InterNetwork)
+            {
+                byte[] bytes = local.GetAddressBytes();
+                if (bytes[0] == 169 && bytes[1] == 254)
+                {
+                    Debug.Log($"Skipping non-routable address: {local}");
+                    continue;
+                }
+
+                localIPs.Add(local);
+            }
+        }
+
+        return localIPs;
+    }
+
     public void StartListening(Action<MdnsService> action)
     {
         try
         {
+            defaultIP = GetDefaultInterfaceIP();
+            if (defaultIP == null)
+            {
+                Debug.LogError("No default interface found. Cannot start multicast listener.");
+                return;
+            }
+
             udpClient = new UdpClient();
             udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-            udpClient.Client.Bind(new IPEndPoint(IPAddress.Any, multicastPort));
-            udpClient.JoinMulticastGroup(IPAddress.Parse(multicastAddress));
+            udpClient.Client.Bind(new IPEndPoint(defaultIP, multicastPort));
+            udpClient.JoinMulticastGroup(IPAddress.Parse(multicastAddress), defaultIP);
 
             this.action = action;
 
