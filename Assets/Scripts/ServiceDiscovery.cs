@@ -4,6 +4,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ServiceDiscovery : MonoBehaviour
@@ -13,17 +14,14 @@ public class ServiceDiscovery : MonoBehaviour
 
     private string receivedIp;
     private string receivedPort;
+    private string receivedPath;
+    private string receivedHost;
     private bool messageReceived = false;
 
     private const string multicastAddress = "224.0.0.251";
     private const int multicastPort = 5353;
 
-    /* 
-    private void Start()
-    {
-        StartListening((ip, port) => Debug.Log($"Service found at {ip}:{port}"));
-    }
-    */
+    public List<MdnsService> discoveredServices = new List<MdnsService>();
 
     public void StartListening(Action<string, string> action)
     {
@@ -53,17 +51,6 @@ public class ServiceDiscovery : MonoBehaviour
         byte[] query = CreateMdnsQuery(serviceName);
         Debug.Log($"Sending mDNS query for {serviceName}");
     
-        /*   
-        string hex = "";
-        foreach (byte b in query)
-        {
-            //hex += b.ToString("X2");
-            hex += $"{b:X2}";
-            hex += " ";
-        }
-        Debug.Log($"Sending message: {hex}");
-        */
-
         udpClient.Send(query, query.Length, new IPEndPoint(IPAddress.Parse(multicastAddress), multicastPort));
     }
 
@@ -133,13 +120,31 @@ public class ServiceDiscovery : MonoBehaviour
 
             if (receivedIp != null && receivedPort != null)
             {
-                messageReceived = true;
-                StopListening();
+                // messageReceived = true;
+                // StopListening();
+                MdnsService currentService = new MdnsService
+                {
+                    IpAddress = receivedIp,
+                    Port = int.Parse(receivedPort),
+                    Path = receivedPath,
+                    Host = receivedHost
+                };
+                discoveredServices.Add(currentService);
+                Debug.Log($"Added service: {currentService.IpAddress}:{currentService.Port}, " +
+                    $"{currentService.Path}, {currentService.Host}");
+                receivedIp = null;
+                receivedPort = null;
+                receivedPath = null;
+                receivedHost = null;
+                // receivedIp = receivedHost = receivedPort = receivedPath = null;
             }
+            /*
             else
             {
                 udpClient?.BeginReceive(OnReceive, null);
             }
+            */
+            udpClient?.BeginReceive(OnReceive, null);
         }
         catch (Exception ex)
         {
@@ -189,6 +194,7 @@ public class ServiceDiscovery : MonoBehaviour
             IPAddress ipAddress = new IPAddress(new ArraySegment<byte>(data, offset, dataLength).ToArray());
             Debug.Log($"A Record: {name} -> {ipAddress}");
             receivedIp = ipAddress.ToString();
+            receivedHost = name;
         }
         else if (recordType == 12) // PTR Record
         {
@@ -210,6 +216,11 @@ public class ServiceDiscovery : MonoBehaviour
         {
             string txtData = Encoding.UTF8.GetString(data, offset, dataLength);
             Debug.Log($"TXT Record: {name} -> {txtData}");
+            if (txtData.Contains("path"))
+            {
+                receivedPath = txtData.Split('=')[1];
+                Debug.Log($"Received path: {receivedPath}");
+            }
         }
         else if (recordType == 47) // NSEC Record
         {
@@ -264,44 +275,6 @@ public class ServiceDiscovery : MonoBehaviour
         return offset + 1;
     }
 
-    /*   
-    private void OnReceive(IAsyncResult result)
-    {
-        if (udpClient == null)
-        {
-            return;
-        }
-
-        try
-        {
-            IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, multicastPort);
-            byte[] receivedBytes = udpClient.EndReceive(result, ref remoteEndPoint);
-            string receivedMessage = Encoding.UTF8.GetString(receivedBytes);
-
-            Debug.Log($"Received message: {receivedMessage} from {remoteEndPoint}");
-
-            string[] parts = receivedMessage.Split(':');
-            if (parts.Length == 3 && IPAddress.TryParse(parts[1], out IPAddress ip))
-            {
-                int port = int.Parse(parts[2]);
-                receivedIp = ip.ToString();
-                receivedPort = port.ToString();
-                messageReceived = true;
-
-                StopListening();
-            }
-            else
-            {
-                udpClient?.BeginReceive(OnReceive, null);
-            }
-        }
-        catch (Exception ex)
-        {
-            Debug.LogError($"Error receiving UDP message: {ex.Message}");
-        }
-    }
-    */
-
     private void Update()
     {
         if (messageReceived)
@@ -324,6 +297,14 @@ public class ServiceDiscovery : MonoBehaviour
         udpClient?.DropMulticastGroup(IPAddress.Parse(multicastAddress));
         udpClient?.Close();
         udpClient = null;
+    }
+
+    public class MdnsService
+    {
+        public string IpAddress { get; set; }
+        public int Port { get; set; }
+        public string Path { get; set; }
+        public string Host { get; set; }
     }
 }
 
