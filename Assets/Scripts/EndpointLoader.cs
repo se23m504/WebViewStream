@@ -19,7 +19,7 @@ public class EndpointLoader : MonoBehaviour
     private const string defaultEndpoint2 = "http://windows.local:8200/mystream/";
     private bool defaultEndpoint1Loaded = false;
     private bool defaultEndpoint2Loaded = false;
-    private List<MdnsService> availableServices = new List<MdnsService>();
+    private HashSet<MdnsService> availableServices = new HashSet<MdnsService>();
 
     private void Start()
     {
@@ -112,9 +112,11 @@ public class EndpointLoader : MonoBehaviour
         triedMulticast = true;
         serviceDiscovery.StartListening((service) =>
         {
-            Debug.Log($"Received multicast message: {service.Host}");
-            availableServices.Add(service);
-            AddServiceToTable(service);
+            bool wasAdded = availableServices.Add(service);
+            if (wasAdded)
+            {
+                AddServiceToTable(service);
+            }
         });
     }
 
