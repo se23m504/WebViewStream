@@ -20,7 +20,8 @@ public class ServiceDiscovery : MonoBehaviour
     private const string multicastAddress = "224.0.0.251";
     private const int multicastPort = 5353;
 
-    public List<MdnsService> discoveredServices = new List<MdnsService>();
+    // public List<MdnsService> discoveredServices = new List<MdnsService>();
+    private Queue<MdnsService> serviceQueue = new Queue<MdnsService>();
 
     public void StartListening(Action<MdnsService> action)
     {
@@ -117,34 +118,25 @@ public class ServiceDiscovery : MonoBehaviour
             // Debug.Log($"Received message: {receivedBytes} from {remoteEndPoint}");
             ParseMdnsResponse(receivedBytes);
 
-            if (receivedIp != null && receivedPort != null)
-            {
-                // StopListening();
-                MdnsService currentService = new MdnsService(receivedIp, int.Parse(receivedPort), receivedPath, receivedHost);
-                /*
-                MdnsService currentService = new MdnsService
-                {
-                    IpAddress = receivedIp,
-                    Port = int.Parse(receivedPort),
-                    Path = receivedPath,
-                    Host = receivedHost
-                };
-                */                
-                discoveredServices.Add(currentService);
-                Debug.Log($"Added service: http://{currentService.Host}:{currentService.Port}{currentService.Path}");
-                receivedIp = null;
-                receivedPort = null;
-                receivedPath = null;
-                receivedHost = null;
-
-                // action?.Invoke(currentService);
-            }
-
             udpClient?.BeginReceive(OnReceive, null);
         }
         catch (Exception ex)
         {
             Debug.LogError($"Error receiving UDP message: {ex.Message}");
+        }
+    }
+
+    private void AddMdnsService()
+    {
+        if (receivedIp != null && receivedPort != null && receivedHost != null && receivedPath != null)
+        {
+            MdnsService currentService = new MdnsService(receivedIp, int.Parse(receivedPort), receivedPath, receivedHost);
+            serviceQueue.Enqueue(currentService);
+            Debug.Log($"Added service: {currentService}");
+            receivedIp = null;
+            receivedPort = null;
+            receivedPath = null;
+            receivedHost = null;
         }
     }
 
@@ -171,6 +163,7 @@ public class ServiceDiscovery : MonoBehaviour
         for (int i = 0; i < additionalRRs; i++)
         {
             offset = ParseRecord(data, offset);
+            AddMdnsService();
         }
     }
 
@@ -188,7 +181,7 @@ public class ServiceDiscovery : MonoBehaviour
         if (recordType == 1) // A Record
         {
             IPAddress ipAddress = new IPAddress(new ArraySegment<byte>(data, offset, dataLength).ToArray());
-            Debug.Log($"A Record: {name} -> {ipAddress}");
+            // Debug.Log($"A Record: {name} -> {ipAddress}");
             receivedIp = ipAddress.ToString();
             receivedHost = name;
         }
@@ -196,7 +189,7 @@ public class ServiceDiscovery : MonoBehaviour
         {
             string target;
             (target, _) = ReadName(data, offset);
-            Debug.Log($"PTR Record: {name} -> {target}");
+            // Debug.Log($"PTR Record: {name} -> {target}");
         }
         else if (recordType == 33) // SRV Record
         {
@@ -205,13 +198,13 @@ public class ServiceDiscovery : MonoBehaviour
             ushort port = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 4));
             string target;
             (target, _) = ReadName(data, offset + 6);
-            Debug.Log($"SRV Record: {name} -> {target}:{port} (priority: {priority}, weight: {weight})");
+            // Debug.Log($"SRV Record: {name} -> {target}:{port} (priority: {priority}, weight: {weight})");
             receivedPort = port.ToString();
         }
         else if (recordType == 16) // TXT Record
         {
             string txtData = Encoding.UTF8.GetString(data, offset, dataLength);
-            Debug.Log($"TXT Record: {name} -> {txtData}");
+            // Debug.Log($"TXT Record: {name} -> {txtData}");
             if (txtData.Contains("path"))
             {
                 receivedPath = txtData.Split('=')[1];
@@ -220,7 +213,7 @@ public class ServiceDiscovery : MonoBehaviour
         }
         else if (recordType == 47) // NSEC Record
         {
-            Debug.Log($"NSEC Record: {name}");
+            // Debug.Log($"NSEC Record: {name}");
         }
         else
         {
@@ -273,7 +266,7 @@ public class ServiceDiscovery : MonoBehaviour
 
     private void Update()
     {
-        if (discoveredServices.Count > 0)
+/*        if (discoveredServices.Count > 0)
         {
             foreach (MdnsService service in discoveredServices)
             {
@@ -281,6 +274,18 @@ public class ServiceDiscovery : MonoBehaviour
                 action?.Invoke(service);
             }
             discoveredServices.Clear();
+        }
+*/        
+        if (serviceQueue.Count > 0)
+        {
+            Debug.Log($"Processing discovered services... Left: {serviceQueue.Count}");
+
+            while (serviceQueue.Count > 0)
+            {
+                MdnsService service = serviceQueue.Dequeue();
+                Debug.Log($"Invoking action with: {service}");
+                action?.Invoke(service);
+            }
         }
     }
 
