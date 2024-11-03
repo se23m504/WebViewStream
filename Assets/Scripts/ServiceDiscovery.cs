@@ -20,7 +20,6 @@ public class ServiceDiscovery : MonoBehaviour
     private const string multicastAddress = "224.0.0.251";
     private const int multicastPort = 5353;
 
-    // public List<MdnsService> discoveredServices = new List<MdnsService>();
     private Queue<MdnsService> serviceQueue = new Queue<MdnsService>();
 
     public void StartListening(Action<MdnsService> action)
@@ -107,15 +106,12 @@ public class ServiceDiscovery : MonoBehaviour
             byte[] receivedBytes = udpClient.EndReceive(result, ref remoteEndPoint);
 
             ushort flags = BitConverter.ToUInt16(new byte[] { receivedBytes[3], receivedBytes[2] }, 0);
-            // Debug.Log($"Flags: {flags:X2}");
-            if (flags == 0x0100) // Standard query
+            if (flags == 0x0100)
             {
-                // Debug.Log("Ignoring non-response packet");
                 udpClient?.BeginReceive(OnReceive, null);
                 return;
             }
 
-            // Debug.Log($"Received message: {receivedBytes} from {remoteEndPoint}");
             ParseMdnsResponse(receivedBytes);
 
             udpClient?.BeginReceive(OnReceive, null);
@@ -147,8 +143,6 @@ public class ServiceDiscovery : MonoBehaviour
         ushort answerRRs = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 6));
         ushort additionalRRs = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 10));
            
-        // Debug.Log($"Questions: {questions}, Answer RRs: {answerRRs}, Additional RRs: {additionalRRs}");
-
         for (int i = 0; i < questions; i++)
         {
             offset = SkipName(data, offset);
@@ -181,7 +175,6 @@ public class ServiceDiscovery : MonoBehaviour
         if (recordType == 1) // A Record
         {
             IPAddress ipAddress = new IPAddress(new ArraySegment<byte>(data, offset, dataLength).ToArray());
-            // Debug.Log($"A Record: {name} -> {ipAddress}");
             receivedIp = ipAddress.ToString();
             receivedHost = name;
         }
@@ -189,7 +182,6 @@ public class ServiceDiscovery : MonoBehaviour
         {
             string target;
             (target, _) = ReadName(data, offset);
-            // Debug.Log($"PTR Record: {name} -> {target}");
         }
         else if (recordType == 33) // SRV Record
         {
@@ -198,22 +190,19 @@ public class ServiceDiscovery : MonoBehaviour
             ushort port = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 4));
             string target;
             (target, _) = ReadName(data, offset + 6);
-            // Debug.Log($"SRV Record: {name} -> {target}:{port} (priority: {priority}, weight: {weight})");
             receivedPort = port.ToString();
         }
         else if (recordType == 16) // TXT Record
         {
             string txtData = Encoding.UTF8.GetString(data, offset, dataLength);
-            // Debug.Log($"TXT Record: {name} -> {txtData}");
             if (txtData.Contains("path"))
             {
                 receivedPath = txtData.Split('=')[1];
-                // Debug.Log($"Received path: {receivedPath}");
             }
         }
         else if (recordType == 47) // NSEC Record
         {
-            // Debug.Log($"NSEC Record: {name}");
+            Debug.Log($"NSEC Record: {name}");
         }
         else
         {
@@ -266,19 +255,9 @@ public class ServiceDiscovery : MonoBehaviour
 
     private void Update()
     {
-/*        if (discoveredServices.Count > 0)
-        {
-            foreach (MdnsService service in discoveredServices)
-            {
-                Debug.Log($"Invoking action with: {service}");
-                action?.Invoke(service);
-            }
-            discoveredServices.Clear();
-        }
-*/        
         if (serviceQueue.Count > 0)
         {
-            Debug.Log($"Processing discovered services... Left: {serviceQueue.Count}");
+            Debug.Log($"Queued services: {serviceQueue.Count}");
 
             while (serviceQueue.Count > 0)
             {
@@ -300,13 +279,5 @@ public class ServiceDiscovery : MonoBehaviour
         udpClient?.Close();
         udpClient = null;
     }
-
-/*    public class MdnsService
-    {
-        public string IpAddress { get; set; }
-        public int Port { get; set; }
-        public string Path { get; set; }
-        public string Host { get; set; }
-    }
-*/}
+}
 

@@ -122,7 +122,6 @@ public class EndpointLoader : MonoBehaviour
 
     private void AddServiceToTable(MdnsService service)
     {
-        Debug.Log($"Adding service to table: {service.Host}");
         servicesListPopulator.AddItemFromService(service, () =>
         {
             ChangeApiUrl($"http://{service.Host}:{service.Port}{service.Path}");
