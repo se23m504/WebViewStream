@@ -104,7 +104,7 @@ public class ServiceDiscovery : MonoBehaviour
     {
         byte[] query = CreateMdnsQuery(serviceName);
         Debug.Log($"Sending mDNS query for {serviceName}");
-    
+
         udpClient.Send(query, query.Length, new IPEndPoint(IPAddress.Parse(multicastAddress), multicastPort));
     }
 
@@ -197,7 +197,7 @@ public class ServiceDiscovery : MonoBehaviour
         ushort questions = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 4));
         ushort answerRRs = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 6));
         ushort additionalRRs = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, 10));
-           
+
         for (int i = 0; i < questions; i++)
         {
             offset = SkipName(data, offset);
