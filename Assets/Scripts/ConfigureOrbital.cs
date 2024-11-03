@@ -10,6 +10,8 @@ public class ConfigureOrbital : MonoBehaviour
     public GameObject canvas1;
     public GameObject canvas2;
 
+    // public List<GameObject> canvases;
+
     private Orbital orbital1;
     private Orbital orbital2;
 

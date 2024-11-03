@@ -24,6 +24,9 @@ project.lock.json
 
 App/
 
+Examples/
+Examples.meta
+
 sysinfo.txt
 
 *.pidb.meta
