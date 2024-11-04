@@ -20,16 +20,18 @@ public class EndpointLoader : MonoBehaviour
     [SerializeField]
     private ServicesListPopulator servicesListPopulator;
 
+    private string apiUrl;
     private bool triedMulticast = false;
-    private string apiUrl = "http://windows.loca:5000/api/endpoints"; // Typo on purpose
+    private bool defaultEndpointLoaded = false;
+    private HashSet<MdnsService> availableServices = new HashSet<MdnsService>();
+
+    private const string defaultApiUrl = "http://windows.local:5000/api/endpoints";
     private const string defaultEndpoint1 = "http://windows.local:8100/mystream/";
     private const string defaultEndpoint2 = "http://windows.local:8200/mystream/";
-    private bool defaultEndpoint1Loaded = false;
-    private bool defaultEndpoint2Loaded = false;
-    private HashSet<MdnsService> availableServices = new HashSet<MdnsService>();
 
     private void Start()
     {
+        apiUrl = defaultApiUrl;
         StartCoroutine(LoadEndpoints());
     }
 
@@ -38,13 +40,13 @@ public class EndpointLoader : MonoBehaviour
         using (UnityWebRequest request = UnityWebRequest.Get(defaultEndpoint1))
         {
             yield return request.SendWebRequest();
-            ProcessEndpointResponse(request, webView1, defaultEndpoint1, ref defaultEndpoint1Loaded);
+            ProcessEndpointResponse(request, webView1, defaultEndpoint1, ref defaultEndpointLoaded);
         }
 
         using (UnityWebRequest request = UnityWebRequest.Get(defaultEndpoint2))
         {
             yield return request.SendWebRequest();
-            ProcessEndpointResponse(request, webView2, defaultEndpoint2, ref defaultEndpoint2Loaded);
+            ProcessEndpointResponse(request, webView2, defaultEndpoint2, ref defaultEndpointLoaded);
         }
     }
 
@@ -64,6 +66,12 @@ public class EndpointLoader : MonoBehaviour
 
     private IEnumerator LoadEndpoints()
     {
+        if (!triedMulticast)
+        {
+            StartListeningForMulticast();
+            yield break;
+        }
+
         var request = new UnityWebRequest(apiUrl, UnityWebRequest.kHttpVerbGET);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
@@ -84,14 +92,9 @@ public class EndpointLoader : MonoBehaviour
             yield return StartCoroutine(TryLoadingFromDefaultEndpoints());
         }
 
-        if (defaultEndpoint1Loaded || defaultEndpoint2Loaded)
+        if (defaultEndpointLoaded)
         {
-            Debug.Log("At least one default endpoint loaded successfully. No need for multicast or endpoints.");
-            yield break;
-        }
-        else if (!triedMulticast)
-        {
-            StartListeningForMulticast();
+            Debug.Log("At least one default endpoint loaded successfully");
             yield break;
         }
 
@@ -103,7 +106,7 @@ public class EndpointLoader : MonoBehaviour
 
         if (endpoints.Length == 0)
         {
-            Debug.LogError("Parsed endpoints are empty.");
+            Debug.LogError("Parsed endpoints are empty");
         }
         else
         {
