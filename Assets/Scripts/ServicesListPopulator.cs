@@ -74,9 +74,6 @@ public class ServicesListPopulator : MonoBehaviour
     {
         isVisible = !isVisible;
 
-        foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
-        {
-            renderer.enabled = isVisible;
-        }
+        gameObject.SetActive(isVisible);
     }
 }
