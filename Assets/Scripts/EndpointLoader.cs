@@ -136,6 +136,12 @@ public class EndpointLoader : MonoBehaviour
         });
     }
 
+    public void ClearServices()
+    {
+        availableServices.Clear();
+        servicesListPopulator.RemoveAllItems();
+    }
+
     public void ReloadEndpoints()
     {
         triedMulticast = false;

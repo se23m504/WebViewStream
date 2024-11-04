@@ -38,6 +38,38 @@ public class ServicesListPopulator : MonoBehaviour
         scrollView.UpdateContent();
     }
 
+    public void RemoveAllItems()
+    {
+        foreach (Transform child in gridObjectCollection.transform)
+        {
+            Destroy(child.gameObject);
+        }
+
+        Debug.Log("Removed all services from table");
+        gridObjectCollection.UpdateCollection();
+        scrollView.UpdateContent();
+    }
+
+    public void RemoveItemByService(MdnsService service)
+    {
+        string fullAddress = service.Host + ":" + service.Port + service.Path;
+        string ipAddress = service.IpAddress;
+
+        foreach (Transform child in gridObjectCollection.transform)
+        {
+            TextMeshPro[] textMeshes = child.GetComponentsInChildren<TextMeshPro>();
+            if (textMeshes.Length >= 2 && textMeshes[0].text == fullAddress && textMeshes[1].text == ipAddress)
+            {
+                Debug.Log($"Removing service from table: {service}");
+                Destroy(child.gameObject);
+                break;
+            }
+        }
+
+        gridObjectCollection.UpdateCollection();
+        scrollView.UpdateContent();
+    }
+
     public void ToggleVisibility()
     {
         isVisible = !isVisible;

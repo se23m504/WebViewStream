@@ -230,7 +230,6 @@ public class ServiceDiscovery : MonoBehaviour
         if (ttl == 0)
         {
             Debug.LogWarning($"Zero TTL for {name}");
-            // TODO: Remove service from list
             return offset + dataLength;
         }
 
