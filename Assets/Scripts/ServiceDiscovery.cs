@@ -227,6 +227,13 @@ public class ServiceDiscovery : MonoBehaviour
         ushort dataLength = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 8));
         offset += 10;
 
+        if (ttl == 0)
+        {
+            Debug.LogWarning($"Zero TTL for {name}");
+            // TODO: Remove service from list
+            return offset + dataLength;
+        }
+
         if (recordType == 1) // A Record
         {
             IPAddress ipAddress = new IPAddress(new ArraySegment<byte>(data, offset, dataLength).ToArray());
