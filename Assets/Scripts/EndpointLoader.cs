@@ -15,6 +15,9 @@ public class EndpointLoader : MonoBehaviour
     private WebView webView2;
 
     [SerializeField]
+    private GameObject dynamicItem;
+
+    [SerializeField]
     private ServiceDiscovery serviceDiscovery;
 
     [SerializeField]
@@ -23,6 +26,7 @@ public class EndpointLoader : MonoBehaviour
     private string apiUrl;
     private bool triedMulticast = false;
     private bool defaultEndpointLoaded = false;
+    private List<GameObject> instantiatedItems = new List<GameObject>();
     private HashSet<MdnsService> availableServices = new HashSet<MdnsService>();
 
     private const string defaultApiUrl = "http://windows.local:5000/api/endpoints";
@@ -33,6 +37,56 @@ public class EndpointLoader : MonoBehaviour
     {
         apiUrl = defaultApiUrl;
         StartCoroutine(LoadEndpoints());
+    }
+
+    private Vector3 CalculateNextPosition()
+    {
+        if (instantiatedItems.Count == 0)
+        {
+            // return dynamicItem.transform.position;
+            return new Vector3(-0.4f, 0.1f, 1);
+        }
+
+        GameObject lastItem = instantiatedItems[instantiatedItems.Count - 1];
+
+        Vector3 lastPosition = lastItem.transform.position;
+        float itemWidth = GetItemWidth(lastItem);
+        return new Vector3(lastPosition.x + itemWidth, lastPosition.y, lastPosition.z);
+    }
+
+    private float GetItemWidth(GameObject item)
+    {
+        Renderer renderer = item.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            return renderer.bounds.size.x;
+        }
+
+        return 1.0f;
+    }
+
+    public void SpawnItem(string url)
+    {
+        if (dynamicItem != null)
+        {
+            Vector3 nextPosition = CalculateNextPosition();
+
+            GameObject newItem = Instantiate(dynamicItem, nextPosition, dynamicItem.transform.rotation, dynamicItem.transform.parent);
+            newItem.SetActive(true);
+
+            instantiatedItems.Add(newItem);
+
+            var webView = newItem.GetComponentInChildren<WebView>();
+
+            if (webView != null)
+            {
+                webView.Load(url);
+            }
+        }
+        else
+        {
+            Debug.LogError("Dynamic item is not assigned.");
+        }
     }
 
     private IEnumerator TryLoadingFromDefaultEndpoints()
@@ -110,8 +164,15 @@ public class EndpointLoader : MonoBehaviour
         }
         else
         {
-            webView1.Load(endpoints[0].url ?? defaultEndpoint1);
-            webView2.Load(endpoints[1].url ?? defaultEndpoint2);
+            foreach (var endpoint in endpoints)
+            {
+                if (endpoint.url == null || endpoint.url.Length == 0)
+                {
+                    Debug.LogWarning($"Endpoint URL is null for endpoint");
+                    continue;
+                }
+                SpawnItem(endpoint.url);
+            }
         }
     }
 
@@ -153,8 +214,8 @@ public class EndpointLoader : MonoBehaviour
 
     private void UseDefaultEndpoints()
     {
-        webView1.Load(defaultEndpoint1);
-        webView2.Load(defaultEndpoint2);
+        // webView1.Load(defaultEndpoint1);
+        // webView2.Load(defaultEndpoint2);
     }
 
     [Serializable]
