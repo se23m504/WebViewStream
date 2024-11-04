@@ -10,7 +10,7 @@
         "com.unity.xr.openxr": "1.7.0",
         "com.unity.xr.core-utils": "2.1.0"
       },
-      "hash": "69dcce681c41a6c2a83bc2d7336afccf3e8a6ce4"
+      "hash": "0b23fd9944f69c5f1c6df3259d1036731fa3c721"
     },
     "com.microsoft.mixedreality.toolkit.foundation": {
       "version": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.toolkit.foundation",
@@ -19,7 +19,7 @@
       "dependencies": {
         "com.microsoft.mixedreality.toolkit.standardassets": "2.8.3"
       },
-      "hash": "69dcce681c41a6c2a83bc2d7336afccf3e8a6ce4"
+      "hash": "0b23fd9944f69c5f1c6df3259d1036731fa3c721"
     },
     "com.microsoft.mixedreality.toolkit.standardassets": {
       "version": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.toolkit.standardassets",
@@ -28,7 +28,7 @@
       "dependencies": {
         "com.unity.textmeshpro": "2.1.4"
       },
-      "hash": "69dcce681c41a6c2a83bc2d7336afccf3e8a6ce4"
+      "hash": "0b23fd9944f69c5f1c6df3259d1036731fa3c721"
     },
     "com.microsoft.mixedreality.webview.unity": {
       "version": "https://github.com/se23m504/mixedreality.git?path=/com.microsoft.mixedreality.webview.unity",
