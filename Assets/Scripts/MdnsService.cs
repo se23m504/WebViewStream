@@ -23,11 +23,11 @@ public class MdnsService
 
     public override bool Equals(object obj)
     {
-        return obj is MdnsService service &&
-               IpAddress == service.IpAddress &&
-               Host == service.Host &&
-               Port == service.Port &&
-               Path == service.Path;
+        return obj is MdnsService service
+            && IpAddress == service.IpAddress
+            && Host == service.Host
+            && Port == service.Port
+            && Path == service.Path;
     }
 
     public override int GetHashCode()

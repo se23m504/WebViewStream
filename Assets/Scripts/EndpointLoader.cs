@@ -1,10 +1,10 @@
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Networking;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using Microsoft.MixedReality.WebView;
+using UnityEngine;
+using UnityEngine.Networking;
+using UnityEngine.UI;
 
 public class EndpointLoader : MonoBehaviour
 {
@@ -71,7 +71,12 @@ public class EndpointLoader : MonoBehaviour
         {
             Vector3 nextPosition = CalculateNextPosition();
 
-            GameObject newItem = Instantiate(dynamicItem, nextPosition, dynamicItem.transform.rotation, dynamicItem.transform.parent);
+            GameObject newItem = Instantiate(
+                dynamicItem,
+                nextPosition,
+                dynamicItem.transform.rotation,
+                dynamicItem.transform.parent
+            );
             newItem.SetActive(true);
 
             instantiatedItems.Add(newItem);
@@ -104,9 +109,17 @@ public class EndpointLoader : MonoBehaviour
         }
     }
 
-    private void ProcessEndpointResponse(UnityWebRequest request, WebView webView, string endpoint, ref bool loadedFlag)
+    private void ProcessEndpointResponse(
+        UnityWebRequest request,
+        WebView webView,
+        string endpoint,
+        ref bool loadedFlag
+    )
     {
-        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        if (
+            request.result == UnityWebRequest.Result.ConnectionError
+            || request.result == UnityWebRequest.Result.ProtocolError
+        )
         {
             Debug.LogError($"Error loading from {endpoint}: {request.error}");
         }
@@ -132,7 +145,10 @@ public class EndpointLoader : MonoBehaviour
 
         yield return request.SendWebRequest();
 
-        if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError)
+        if (
+            request.result == UnityWebRequest.Result.ConnectionError
+            || request.result == UnityWebRequest.Result.ProtocolError
+        )
         {
             Debug.LogWarning($"Error loading endpoints: {request.error}");
 
@@ -181,23 +197,28 @@ public class EndpointLoader : MonoBehaviour
         Debug.Log("Starting multicast discovery for endpoints");
 
         triedMulticast = true;
-        serviceDiscovery.StartListening((service) =>
-        {
-            bool wasAdded = availableServices.Add(service);
-            if (wasAdded)
+        serviceDiscovery.StartListening(
+            (service) =>
             {
-                AddServiceToTable(service);
+                bool wasAdded = availableServices.Add(service);
+                if (wasAdded)
+                {
+                    AddServiceToTable(service);
+                }
             }
-        });
+        );
     }
 
     private void AddServiceToTable(MdnsService service)
     {
-        servicesListPopulator.AddItemFromService(service, () =>
-        {
-            apiUrl = $"http://{service.Host}:{service.Port}{service.Path}";
-            StartCoroutine(LoadEndpoints());
-        });
+        servicesListPopulator.AddItemFromService(
+            service,
+            () =>
+            {
+                apiUrl = $"http://{service.Host}:{service.Port}{service.Path}";
+                StartCoroutine(LoadEndpoints());
+            }
+        );
     }
 
     public void ClearServices()

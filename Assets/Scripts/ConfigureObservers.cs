@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.SpatialAwareness;
+using UnityEngine;
 
 public class ConfigureObservers : MonoBehaviour
 {
@@ -10,7 +10,8 @@ public class ConfigureObservers : MonoBehaviour
 
     private void Start()
     {
-        spatialAwarenessSystem = MixedRealityToolkit.Instance.GetService<IMixedRealitySpatialAwarenessSystem>();
+        spatialAwarenessSystem =
+            MixedRealityToolkit.Instance.GetService<IMixedRealitySpatialAwarenessSystem>();
 
         if (spatialAwarenessSystem != null)
         {
@@ -23,4 +24,3 @@ public class ConfigureObservers : MonoBehaviour
         }
     }
 }
-

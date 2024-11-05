@@ -1,11 +1,11 @@
 using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class ServiceDiscovery : MonoBehaviour
@@ -82,7 +82,11 @@ public class ServiceDiscovery : MonoBehaviour
             }
 
             udpClient = new UdpClient();
-            udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+            udpClient.Client.SetSocketOption(
+                SocketOptionLevel.Socket,
+                SocketOptionName.ReuseAddress,
+                true
+            );
             udpClient.Client.Bind(new IPEndPoint(defaultIP, multicastPort));
             udpClient.JoinMulticastGroup(IPAddress.Parse(multicastAddress), defaultIP);
 
@@ -105,7 +109,11 @@ public class ServiceDiscovery : MonoBehaviour
         byte[] query = CreateMdnsQuery(serviceName);
         Debug.Log($"Sending mDNS query for {serviceName}");
 
-        udpClient.Send(query, query.Length, new IPEndPoint(IPAddress.Parse(multicastAddress), multicastPort));
+        udpClient.Send(
+            query,
+            query.Length,
+            new IPEndPoint(IPAddress.Parse(multicastAddress), multicastPort)
+        );
     }
 
     private byte[] CreateMdnsQuery(string serviceName)
@@ -114,9 +122,27 @@ public class ServiceDiscovery : MonoBehaviour
         ushort flags = 0x0100;
         ushort questions = 1;
         byte[] header = new byte[12];
-        Array.Copy(BitConverter.GetBytes((ushort)IPAddress.HostToNetworkOrder((short)transactionId)), 0, header, 0, 2);
-        Array.Copy(BitConverter.GetBytes((ushort)IPAddress.HostToNetworkOrder((short)flags)), 0, header, 2, 2);
-        Array.Copy(BitConverter.GetBytes((ushort)IPAddress.HostToNetworkOrder((short)questions)), 0, header, 4, 2);
+        Array.Copy(
+            BitConverter.GetBytes((ushort)IPAddress.HostToNetworkOrder((short)transactionId)),
+            0,
+            header,
+            0,
+            2
+        );
+        Array.Copy(
+            BitConverter.GetBytes((ushort)IPAddress.HostToNetworkOrder((short)flags)),
+            0,
+            header,
+            2,
+            2
+        );
+        Array.Copy(
+            BitConverter.GetBytes((ushort)IPAddress.HostToNetworkOrder((short)questions)),
+            0,
+            header,
+            4,
+            2
+        );
 
         byte[] name = EncodeName(serviceName);
         byte[] query = new byte[header.Length + name.Length + 4];
@@ -160,7 +186,10 @@ public class ServiceDiscovery : MonoBehaviour
             IPEndPoint remoteEndPoint = new IPEndPoint(IPAddress.Any, multicastPort);
             byte[] receivedBytes = udpClient.EndReceive(result, ref remoteEndPoint);
 
-            ushort flags = BitConverter.ToUInt16(new byte[] { receivedBytes[3], receivedBytes[2] }, 0);
+            ushort flags = BitConverter.ToUInt16(
+                new byte[] { receivedBytes[3], receivedBytes[2] },
+                0
+            );
             if (flags == 0x0100)
             {
                 udpClient?.BeginReceive(OnReceive, null);
@@ -179,9 +208,19 @@ public class ServiceDiscovery : MonoBehaviour
 
     private void AddMdnsService()
     {
-        if (receivedIp != null && receivedPort != null && receivedHost != null && receivedPath != null)
+        if (
+            receivedIp != null
+            && receivedPort != null
+            && receivedHost != null
+            && receivedPath != null
+        )
         {
-            MdnsService currentService = new MdnsService(receivedIp, int.Parse(receivedPort), receivedPath, receivedHost);
+            MdnsService currentService = new MdnsService(
+                receivedIp,
+                int.Parse(receivedPort),
+                receivedPath,
+                receivedHost
+            );
             serviceQueue.Enqueue(currentService);
             Debug.Log($"Added service: {currentService}");
             receivedIp = null;
@@ -221,10 +260,13 @@ public class ServiceDiscovery : MonoBehaviour
         string name;
         (name, offset) = ReadName(data, offset);
 
-        ushort recordType = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset));
-        ushort recordClass = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 2));
+        ushort recordType = (ushort)
+            IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset));
+        ushort recordClass = (ushort)
+            IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 2));
         uint ttl = (uint)IPAddress.NetworkToHostOrder(BitConverter.ToInt32(data, offset + 4));
-        ushort dataLength = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 8));
+        ushort dataLength = (ushort)
+            IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 8));
         offset += 10;
 
         if (ttl == 0)
@@ -235,7 +277,9 @@ public class ServiceDiscovery : MonoBehaviour
 
         if (recordType == 1) // A Record
         {
-            IPAddress ipAddress = new IPAddress(new ArraySegment<byte>(data, offset, dataLength).ToArray());
+            IPAddress ipAddress = new IPAddress(
+                new ArraySegment<byte>(data, offset, dataLength).ToArray()
+            );
             receivedIp = ipAddress.ToString();
             receivedHost = name;
         }
@@ -246,9 +290,12 @@ public class ServiceDiscovery : MonoBehaviour
         }
         else if (recordType == 33) // SRV Record
         {
-            ushort priority = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset));
-            ushort weight = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 2));
-            ushort port = (ushort)IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 4));
+            ushort priority = (ushort)
+                IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset));
+            ushort weight = (ushort)
+                IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 2));
+            ushort port = (ushort)
+                IPAddress.NetworkToHostOrder(BitConverter.ToInt16(data, offset + 4));
             string target;
             (target, _) = ReadName(data, offset + 6);
             receivedPort = port.ToString();
@@ -341,4 +388,3 @@ public class ServiceDiscovery : MonoBehaviour
         udpClient = null;
     }
 }
-

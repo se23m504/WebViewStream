@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.Utilities;
 using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
+using UnityEngine;
 
 public class ConfigureOrbital : MonoBehaviour
 {
@@ -35,9 +35,16 @@ public class ConfigureOrbital : MonoBehaviour
             solverHandler2 = canvas2.GetComponent<SolverHandler>();
         }
 
-        if (orbital1 == null || solverHandler1 == null || orbital2 == null || solverHandler2 == null)
+        if (
+            orbital1 == null
+            || solverHandler1 == null
+            || orbital2 == null
+            || solverHandler2 == null
+        )
         {
-            Debug.LogError("One or both Canvas objects are missing an Orbital or SolverHandler component.");
+            Debug.LogError(
+                "One or both Canvas objects are missing an Orbital or SolverHandler component."
+            );
         }
     }
 
@@ -57,7 +64,8 @@ public class ConfigureOrbital : MonoBehaviour
             {
                 Vector3 headPosition = Camera.main.transform.position;
                 Quaternion headRotation = Camera.main.transform.rotation;
-                Vector3 relativePosition = Quaternion.Inverse(headRotation) * (orbital.transform.position - headPosition);
+                Vector3 relativePosition =
+                    Quaternion.Inverse(headRotation) * (orbital.transform.position - headPosition);
 
                 orbital.LocalOffset = relativePosition;
 

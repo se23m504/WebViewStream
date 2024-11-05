@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.Utilities;
 using Microsoft.MixedReality.Toolkit.Input;
+using Microsoft.MixedReality.Toolkit.Utilities;
+using UnityEngine;
 
 public class ConfigurePointer : MonoBehaviour
 {
@@ -33,4 +33,3 @@ public class ConfigurePointer : MonoBehaviour
         PointerUtils.SetHandRayPointerBehavior(PointerBehavior.AlwaysOff);
     }
 }
-

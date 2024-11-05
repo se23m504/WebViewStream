@@ -1,9 +1,9 @@
-﻿using TMPro;
-using System;
+﻿using System;
 using System.Collections;
-using UnityEngine;
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Utilities;
+using TMPro;
+using UnityEngine;
 
 public class ServicesListPopulator : MonoBehaviour
 {
@@ -27,12 +27,14 @@ public class ServicesListPopulator : MonoBehaviour
         TextMeshPro[] textMeshes = itemInstance.GetComponentsInChildren<TextMeshPro>();
         textMeshes[0].text = service.Host + ":" + service.Port + service.Path;
         textMeshes[1].text = service.IpAddress;
-        itemInstance.GetComponentInChildren<Interactable>().OnClick.AddListener(() =>
-        {
-            Debug.Log($"Clicked on service: {service.Host}");
-            action.Invoke();
-            ToggleVisibility();
-        });
+        itemInstance
+            .GetComponentInChildren<Interactable>()
+            .OnClick.AddListener(() =>
+            {
+                Debug.Log($"Clicked on service: {service.Host}");
+                action.Invoke();
+                ToggleVisibility();
+            });
 
         gridObjectCollection.UpdateCollection();
         scrollView.UpdateContent();
@@ -58,7 +60,11 @@ public class ServicesListPopulator : MonoBehaviour
         foreach (Transform child in gridObjectCollection.transform)
         {
             TextMeshPro[] textMeshes = child.GetComponentsInChildren<TextMeshPro>();
-            if (textMeshes.Length >= 2 && textMeshes[0].text == fullAddress && textMeshes[1].text == ipAddress)
+            if (
+                textMeshes.Length >= 2
+                && textMeshes[0].text == fullAddress
+                && textMeshes[1].text == ipAddress
+            )
             {
                 Debug.Log($"Removing service from table: {service}");
                 Destroy(child.gameObject);
