@@ -108,11 +108,7 @@ public class EndpointLoader : MonoBehaviour
         }
     }
 
-    private void ProcessEndpointResponse(
-        UnityWebRequest request,
-        string endpoint,
-        ref bool loadedFlag
-    )
+    private void ProcessEndpointResponse(UnityWebRequest request, string endpoint, ref bool loadedFlag)
     {
         if (
             request.result == UnityWebRequest.Result.ConnectionError
