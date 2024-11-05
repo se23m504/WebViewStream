@@ -17,11 +17,15 @@ public class EndpointLoader : MonoBehaviour
     [SerializeField]
     private ServicesListPopulator servicesListPopulator;
 
+    [SerializeField]
+    private DialogHandler dialogHandler;
+
     private string apiUrl;
     private bool triedMulticast = false;
     private bool defaultEndpointLoaded = false;
     private List<GameObject> instantiatedItems = new List<GameObject>();
     private HashSet<MdnsService> availableServices = new HashSet<MdnsService>();
+    private float loadTimeout = 10f;
 
     private const string defaultApiUrl = "http://windows.local:5000/api/endpoints";
     private const string defaultEndpoint1 = "http://windows.local:8100/mystream/";
@@ -30,7 +34,28 @@ public class EndpointLoader : MonoBehaviour
     private void Start()
     {
         apiUrl = defaultApiUrl;
+        StartCoroutine(TimeoutFallback());
         StartCoroutine(LoadEndpoints());
+    }
+
+    private IEnumerator TimeoutFallback()
+    {
+        float timer = 0f;
+
+        while (timer < loadTimeout && availableServices.Count == 0)
+        {
+            yield return new WaitForSeconds(1f);
+            timer += 1f;
+        }
+
+        if (availableServices.Count == 0)
+        {
+            Debug.LogWarning("Timeout reached. Loading default endpoints...");
+            dialogHandler.OpenDialog("Timeout reached", "No services found. Load default endpoints?", () =>
+            {
+                StartCoroutine(TryLoadingFromDefaultEndpoints());
+            });
+        }
     }
 
     private Vector3 CalculateNextPosition()
@@ -106,6 +131,15 @@ public class EndpointLoader : MonoBehaviour
             yield return request.SendWebRequest();
             ProcessEndpointResponse(request, defaultEndpoint2, ref defaultEndpointLoaded);
         }
+
+        if (!defaultEndpointLoaded)
+        {
+            Debug.LogError("Failed to load default endpoints");
+            dialogHandler.OpenDialog("Failed to load default endpoints", "Do you want to try one more time?", () =>
+            {
+                StartCoroutine(TryLoadingFromDefaultEndpoints());
+            });
+        }
     }
 
     private void ProcessEndpointResponse(UnityWebRequest request, string endpoint, ref bool loadedFlag)
@@ -130,6 +164,12 @@ public class EndpointLoader : MonoBehaviour
         if (!triedMulticast)
         {
             StartListeningForMulticast();
+            yield break;
+        }
+
+        if (defaultEndpointLoaded)
+        {
+            Debug.Log("Default endpoint already loaded");
             yield break;
         }
 
