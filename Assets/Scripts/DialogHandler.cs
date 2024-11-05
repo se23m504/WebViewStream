@@ -1,6 +1,6 @@
+using System;
 using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
-using System;
 
 public class DialogHandler : MonoBehaviour
 {
@@ -9,7 +9,13 @@ public class DialogHandler : MonoBehaviour
 
     public void OpenDialog(string title, string question, Action action)
     {
-        Dialog dialog = Dialog.Open(dialogPrefab, DialogButtonType.Yes | DialogButtonType.No, title, question, true);
+        Dialog dialog = Dialog.Open(
+            dialogPrefab,
+            DialogButtonType.Yes | DialogButtonType.No,
+            title,
+            question,
+            true
+        );
         if (dialog != null)
         {
             // myDialog.OnClosed += OnClosedDialogEvent;

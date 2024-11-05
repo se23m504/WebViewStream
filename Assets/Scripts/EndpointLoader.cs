@@ -51,10 +51,16 @@ public class EndpointLoader : MonoBehaviour
         if (availableServices.Count == 0)
         {
             Debug.LogWarning("Timeout reached. Loading default endpoints...");
-            dialogHandler.OpenDialog("Timeout reached", "No services found. Load default endpoints?", () =>
-            {
-                StartCoroutine(TryLoadingFromDefaultEndpoints());
-            });
+            dialogHandler.OpenDialog(
+                "Timeout reached",
+                "No services were found within the time limit.\r\n"
+                    + "Would you like to load the default endpoints now?\r\n"
+                    + "If you click \"No\", we will continue waiting for mDNS services to appear.",
+                () =>
+                {
+                    StartCoroutine(TryLoadingFromDefaultEndpoints());
+                }
+            );
         }
     }
 
@@ -135,10 +141,15 @@ public class EndpointLoader : MonoBehaviour
         if (!defaultEndpointLoaded)
         {
             Debug.LogError("Failed to load default endpoints");
-            dialogHandler.OpenDialog("Failed to load default endpoints", "Do you want to try one more time?", () =>
-            {
-                StartCoroutine(TryLoadingFromDefaultEndpoints());
-            });
+            dialogHandler.OpenDialog(
+                "Failed to load the default endpoints\r\n",
+                "Do you want to try one more time?\r\n"
+                    + "If you click \"No\", we will continue waiting for mDNS services to appear.",
+                () =>
+                {
+                    StartCoroutine(TryLoadingFromDefaultEndpoints());
+                }
+            );
         }
     }
 
