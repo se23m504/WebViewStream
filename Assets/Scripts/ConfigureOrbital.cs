@@ -8,72 +8,39 @@ using UnityEngine;
 public class ConfigureOrbital : MonoBehaviour
 {
     [SerializeField]
-    private GameObject canvas1;
+    private EndpointLoader endpointLoader;
 
-    [SerializeField]
-    private GameObject canvas2;
+    private bool orbitalEnabled = false;
 
-    // public List<GameObject> canvases;
-
-    private Orbital orbital1;
-    private Orbital orbital2;
-
-    private SolverHandler solverHandler1;
-    private SolverHandler solverHandler2;
-
-    void Start()
+    public void ToggleOrbital()
     {
-        if (canvas1 != null)
+        orbitalEnabled = !orbitalEnabled;
+        List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
+
+        foreach (GameObject canvas in canvases)
         {
-            orbital1 = canvas1.GetComponent<Orbital>();
-            solverHandler1 = canvas1.GetComponent<SolverHandler>();
-        }
+            Orbital orbital = canvas.GetComponent<Orbital>();
+            SolverHandler solverHandler = canvas.GetComponent<SolverHandler>();
 
-        if (canvas2 != null)
-        {
-            orbital2 = canvas2.GetComponent<Orbital>();
-            solverHandler2 = canvas2.GetComponent<SolverHandler>();
-        }
-
-        if (
-            orbital1 == null
-            || solverHandler1 == null
-            || orbital2 == null
-            || solverHandler2 == null
-        )
-        {
-            Debug.LogError(
-                "One or both Canvas objects are missing an Orbital or SolverHandler component."
-            );
-        }
-    }
-
-    public void ToggleOrbitalScript()
-    {
-        ToggleOrbitalForCanvas(orbital1, solverHandler1);
-        ToggleOrbitalForCanvas(orbital2, solverHandler2);
-    }
-
-    private void ToggleOrbitalForCanvas(Orbital orbital, SolverHandler solverHandler)
-    {
-        if (orbital != null && solverHandler != null)
-        {
-            orbital.enabled = !orbital.enabled;
-
-            if (orbital.enabled)
+            if (orbital != null && solverHandler != null)
             {
-                Vector3 headPosition = Camera.main.transform.position;
-                Quaternion headRotation = Camera.main.transform.rotation;
-                Vector3 relativePosition =
-                    Quaternion.Inverse(headRotation) * (orbital.transform.position - headPosition);
+                orbital.enabled = orbitalEnabled;
 
-                orbital.LocalOffset = relativePosition;
+                if (orbitalEnabled)
+                {
+                    Vector3 headPosition = Camera.main.transform.position;
+                    Quaternion headRotation = Camera.main.transform.rotation;
+                    Vector3 relativePosition =
+                        Quaternion.Inverse(headRotation) * (orbital.transform.position - headPosition);
 
-                solverHandler.UpdateSolvers = true;
-            }
-            else
-            {
-                solverHandler.UpdateSolvers = false;
+                    orbital.LocalOffset = relativePosition;
+
+                    solverHandler.UpdateSolvers = true;
+                }
+                else
+                {
+                    solverHandler.UpdateSolvers = false;
+                }
             }
         }
     }

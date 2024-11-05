@@ -5468,7 +5468,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1193822414}
         m_TargetAssemblyTypeName: ConfigureOrbital, Assembly-CSharp
-        m_MethodName: ToggleOrbitalScript
+        m_MethodName: ToggleOrbital
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6408,10 +6408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2692de2cb7707be478671c78efb37020, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas1: {fileID: 721930529}
-  canvas2: {fileID: 2137857637}
-  addressField1: {fileID: 76995324}
-  addressField2: {fileID: 102826381}
+  endpointLoader: {fileID: 491721038}
 --- !u!1 &1041187335
 GameObject:
   m_ObjectHideFlags: 0
@@ -6911,8 +6908,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 487c06418920ab945bfc039c0ba92d8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas1: {fileID: 721930529}
-  canvas2: {fileID: 2137857637}
+  endpointLoader: {fileID: 491721038}
 --- !u!114 &1303729525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9091,7 +9087,7 @@ MonoBehaviour:
         m_Calls:
         - m_Target: {fileID: 1193822414}
           m_TargetAssemblyTypeName: ConfigureOrbital, Assembly-CSharp
-          m_MethodName: ToggleOrbitalScript
+          m_MethodName: ToggleOrbital
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -10203,7 +10199,7 @@ GameObject:
   - component: {fileID: 2094194865}
   - component: {fileID: 2094194864}
   m_Layer: 5
-  m_Name: AddressField (TMP)
+  m_Name: AddressField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

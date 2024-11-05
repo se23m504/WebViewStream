@@ -9,12 +9,6 @@ using UnityEngine.UI;
 public class EndpointLoader : MonoBehaviour
 {
     [SerializeField]
-    private WebView webView1;
-
-    [SerializeField]
-    private WebView webView2;
-
-    [SerializeField]
     private GameObject dynamicItem;
 
     [SerializeField]
@@ -94,24 +88,28 @@ public class EndpointLoader : MonoBehaviour
         }
     }
 
+    public List<GameObject> GetInstantiatedItems()
+    {
+        return instantiatedItems;
+    }
+
     private IEnumerator TryLoadingFromDefaultEndpoints()
     {
         using (UnityWebRequest request = UnityWebRequest.Get(defaultEndpoint1))
         {
             yield return request.SendWebRequest();
-            ProcessEndpointResponse(request, webView1, defaultEndpoint1, ref defaultEndpointLoaded);
+            ProcessEndpointResponse(request, defaultEndpoint1, ref defaultEndpointLoaded);
         }
 
         using (UnityWebRequest request = UnityWebRequest.Get(defaultEndpoint2))
         {
             yield return request.SendWebRequest();
-            ProcessEndpointResponse(request, webView2, defaultEndpoint2, ref defaultEndpointLoaded);
+            ProcessEndpointResponse(request, defaultEndpoint2, ref defaultEndpointLoaded);
         }
     }
 
     private void ProcessEndpointResponse(
         UnityWebRequest request,
-        WebView webView,
         string endpoint,
         ref bool loadedFlag
     )
@@ -126,7 +124,7 @@ public class EndpointLoader : MonoBehaviour
         else
         {
             Debug.Log($"Loaded from {endpoint} successfully.");
-            webView.Load(endpoint);
+            SpawnItem(endpoint);
             loadedFlag = true;
         }
     }
@@ -231,12 +229,6 @@ public class EndpointLoader : MonoBehaviour
     {
         triedMulticast = false;
         StartCoroutine(LoadEndpoints());
-    }
-
-    private void UseDefaultEndpoints()
-    {
-        // webView1.Load(defaultEndpoint1);
-        // webView2.Load(defaultEndpoint2);
     }
 
     [Serializable]
