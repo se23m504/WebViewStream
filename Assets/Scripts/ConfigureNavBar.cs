@@ -24,15 +24,6 @@ public class ConfigureNavBar : MonoBehaviour
                 inputField.gameObject.SetActive(isVisible);
             }
 
-            /*
-            Transform addressFieldTransform = canvas.transform.Find("AddressField");
-            if (addressFieldTransform != null)
-            {
-                Debug.Log("Setting address field visibility to " + isVisible);
-                addressFieldTransform.gameObject.SetActive(isVisible);
-            }
-            */
-
             BoxCollider boxCollider = canvas.GetComponent<BoxCollider>();
             if (boxCollider != null)
             {

@@ -68,7 +68,6 @@ public class EndpointLoader : MonoBehaviour
     {
         if (instantiatedItems.Count == 0)
         {
-            // return dynamicItem.transform.position;
             return new Vector3(-0.4f, 0.1f, 1);
         }
 
@@ -142,7 +141,7 @@ public class EndpointLoader : MonoBehaviour
         {
             Debug.LogError("Failed to load default endpoints");
             dialogHandler.OpenDialog(
-                "Failed to load the default endpoints\r\n",
+                "Failed to load the default endpoints",
                 "Do you want to try one more time?\r\n"
                     + "If you click \"No\", we will continue waiting for mDNS services to appear.",
                 () =>

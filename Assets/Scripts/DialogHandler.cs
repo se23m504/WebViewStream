@@ -18,7 +18,6 @@ public class DialogHandler : MonoBehaviour
         );
         if (dialog != null)
         {
-            // myDialog.OnClosed += OnClosedDialogEvent;
             dialog.OnClosed += (x) =>
             {
                 if (x.Result == DialogButtonType.Yes)

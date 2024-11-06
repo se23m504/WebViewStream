@@ -286,7 +286,7 @@ public class ServiceDiscovery : MonoBehaviour
         }
         else if (recordType == 47) // NSEC Record
         {
-            Debug.Log($"NSEC Record: {name}");
+            // Debug.Log($"NSEC Record: {name}");
         }
         else
         {
