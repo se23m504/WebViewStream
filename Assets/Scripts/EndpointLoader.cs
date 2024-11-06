@@ -183,6 +183,7 @@ public class EndpointLoader : MonoBehaviour
             yield break;
         }
 
+        Debug.Log($"Loading endpoints from {apiUrl}");
         var request = new UnityWebRequest(apiUrl, UnityWebRequest.kHttpVerbGET);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
@@ -259,7 +260,7 @@ public class EndpointLoader : MonoBehaviour
             service,
             () =>
             {
-                apiUrl = $"http://{service.Host}:{service.Port}{service.Path}";
+                apiUrl = $"http://{service.IpAddress}:{service.Port}{service.Path}";
                 StartCoroutine(LoadEndpoints());
             }
         );
