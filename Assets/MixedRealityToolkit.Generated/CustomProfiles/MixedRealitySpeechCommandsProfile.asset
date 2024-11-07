@@ -60,13 +60,13 @@ MonoBehaviour:
       axisConstraint: 0
   - localizationKey: 
     keyword: Rotate
-    keyCode: 273
+    keyCode: 0
     action:
       id: 0
       description: None
       axisConstraint: 0
   - localizationKey: 
-    keyword: Unfollow
+    keyword: Center
     keyCode: 0
     action:
       id: 0
