@@ -80,14 +80,34 @@ public class EndpointLoader : MonoBehaviour
 
     private float GetItemWidth(GameObject item)
     {
-        Renderer renderer = item.GetComponent<Renderer>();
-        if (renderer != null)
+        RectTransform rectTransform = item.GetComponent<RectTransform>();
+        if (rectTransform != null)
         {
-            return renderer.bounds.size.x;
+            return rectTransform.rect.width * rectTransform.lossyScale.x + 0.2f;
         }
 
-        return 1.0f;
+        return 0.8f;
     }
+
+    /*
+    public void SpawnItem(string url, int position)
+    {
+        if (position < 0 || position > instantiatedItems.Count)
+        {
+            Debug.LogError("Invalid position");
+            return;
+        }
+
+        if (position == instantiatedItems.Count)
+        {
+            SpawnItem(url);
+            return;
+        }
+
+        var webView = instantiatedItems[position].GetComponentInChildren<WebView>();
+        webView.Load(url);
+    }
+    */
 
     public void SpawnItem(string url)
     {
@@ -225,6 +245,15 @@ public class EndpointLoader : MonoBehaviour
         }
         else
         {
+            if (instantiatedItems.Count > 0)
+            {
+                foreach (var item in instantiatedItems)
+                {
+                    Destroy(item);
+                }
+                instantiatedItems.Clear();
+            }
+
             foreach (var endpoint in endpoints)
             {
                 if (endpoint.url == null || endpoint.url.Length == 0)
@@ -232,6 +261,13 @@ public class EndpointLoader : MonoBehaviour
                     Debug.LogWarning($"Endpoint URL is null for endpoint");
                     continue;
                 }
+                /*
+                if (instantiatedItems.Exists(item => item.GetComponentInChildren<WebView>().CurrentURL?.ToString() == endpoint.url))
+                {
+                    Debug.LogWarning($"Endpoint {endpoint.url} already exists");
+                    continue;
+                }
+                */
                 SpawnItem(endpoint.url);
             }
         }
