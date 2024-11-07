@@ -66,7 +66,8 @@ public class ConfigureOrbital : MonoBehaviour
         {
             Transform cameraTransform = Camera.main.transform;
 
-            canvas.transform.position = cameraTransform.position + cameraTransform.TransformDirection(localOffset);
+            canvas.transform.position =
+                cameraTransform.position + cameraTransform.TransformDirection(localOffset);
             canvas.transform.rotation = Quaternion.LookRotation(cameraTransform.forward, cameraTransform.up);
 
             localOffset = new Vector3(localOffset.x + GetItemWidth(canvas), localOffset.y, localOffset.z);
