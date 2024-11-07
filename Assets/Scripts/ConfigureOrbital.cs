@@ -44,4 +44,15 @@ public class ConfigureOrbital : MonoBehaviour
             }
         }
     }
+
+    public void RotateCanvasToFaceUser()
+    {
+        List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
+
+        foreach (GameObject canvas in canvases)
+        {
+            Vector3 directionToCamera = canvas.transform.position - Camera.main.transform.position;
+            canvas.transform.rotation = Quaternion.LookRotation(directionToCamera);
+        }
+    }
 }
