@@ -66,16 +66,17 @@ public class EndpointLoader : MonoBehaviour
 
     private Vector3 CalculateNextPosition()
     {
+        Transform cameraTransform = Camera.main.transform;
+        Vector3 localOffset = new Vector3(-0.4f, 0.1f, 1f);
+
         if (instantiatedItems.Count == 0)
         {
-            return new Vector3(-0.4f, 0.1f, 1);
+            return cameraTransform.position + cameraTransform.TransformDirection(localOffset);
         }
 
         GameObject lastItem = instantiatedItems[instantiatedItems.Count - 1];
-
-        Vector3 lastPosition = lastItem.transform.position;
-        float itemWidth = GetItemWidth(lastItem);
-        return new Vector3(lastPosition.x + itemWidth, lastPosition.y, lastPosition.z);
+        localOffset = new Vector3(localOffset.x + GetItemWidth(lastItem), localOffset.y, localOffset.z);
+        return cameraTransform.position + cameraTransform.TransformDirection(localOffset);
     }
 
     private float GetItemWidth(GameObject item)
@@ -94,11 +95,13 @@ public class EndpointLoader : MonoBehaviour
         if (dynamicItem != null)
         {
             Vector3 nextPosition = CalculateNextPosition();
+            Transform cameraTransform = Camera.main.transform;
+            Quaternion rotation = Quaternion.LookRotation(cameraTransform.forward, cameraTransform.up);
 
             GameObject newItem = Instantiate(
                 dynamicItem,
                 nextPosition,
-                dynamicItem.transform.rotation,
+                rotation,
                 dynamicItem.transform.parent
             );
             newItem.SetActive(true);
