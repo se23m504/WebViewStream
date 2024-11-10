@@ -18,6 +18,9 @@ public class ServicesListPopulator : MonoBehaviour
 
     private bool isVisible = true;
 
+    private const string apiUrlPrefix = "API URL: ";
+    private const string hostPrefix = "Host: ";
+
     public void AddItemFromService(MdnsService service, Action action)
     {
         GameObject itemInstance = Instantiate(dynamicItem, gridObjectCollection.transform);
@@ -25,8 +28,13 @@ public class ServicesListPopulator : MonoBehaviour
 
         Debug.Log($"Adding service to table: {service}");
         TextMeshPro[] textMeshes = itemInstance.GetComponentsInChildren<TextMeshPro>();
-        textMeshes[0].text = service.Host + ":" + service.Port + service.Path;
-        textMeshes[1].text = service.IpAddress;
+        if (textMeshes.Length < 2)
+        {
+            Debug.LogError("Not enough text meshes found in dynamic item");
+            return;
+        }
+        textMeshes[0].text = $"{apiUrlPrefix}http://{service.IpAddress}:{service.Port}{service.Path}";
+        textMeshes[1].text = $"{hostPrefix}{service.Host}";
         itemInstance
             .GetComponentInChildren<Interactable>()
             .OnClick.AddListener(() =>
@@ -54,16 +62,16 @@ public class ServicesListPopulator : MonoBehaviour
 
     public void RemoveItemByService(MdnsService service)
     {
-        string fullAddress = service.Host + ":" + service.Port + service.Path;
-        string ipAddress = service.IpAddress;
+        string apiUrl = $"{apiUrlPrefix}http://{service.IpAddress}:{service.Port}{service.Path}";
+        string hostname = $"{hostPrefix}{service.Host}";
 
         foreach (Transform child in gridObjectCollection.transform)
         {
             TextMeshPro[] textMeshes = child.GetComponentsInChildren<TextMeshPro>();
             if (
                 textMeshes.Length >= 2
-                && textMeshes[0].text == fullAddress
-                && textMeshes[1].text == ipAddress
+                && textMeshes[0].text == apiUrl
+                && textMeshes[1].text == hostname
             )
             {
                 Debug.Log($"Removing service from table: {service}");
