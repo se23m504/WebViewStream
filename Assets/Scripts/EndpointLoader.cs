@@ -26,6 +26,7 @@ public class EndpointLoader : MonoBehaviour
     private List<GameObject> instantiatedItems = new List<GameObject>();
     private HashSet<MdnsService> availableServices = new HashSet<MdnsService>();
     private float loadTimeout = 10f;
+    private bool areItemsVisible = true;
 
     private const string defaultApiUrl = "http://windows.local:5000/api/endpoints";
     private const string defaultEndpoint1 = "http://windows.local:8100/mystream/";
@@ -77,6 +78,15 @@ public class EndpointLoader : MonoBehaviour
         GameObject lastItem = instantiatedItems[instantiatedItems.Count - 1];
         localOffset = new Vector3(localOffset.x + GetItemWidth(lastItem), localOffset.y, localOffset.z);
         return cameraTransform.position + cameraTransform.TransformDirection(localOffset);
+    }
+
+    public void ToggleItemsVisibility()
+    {
+        areItemsVisible = !areItemsVisible;
+        foreach (var item in instantiatedItems)
+        {
+            item.SetActive(areItemsVisible);
+        }
     }
 
     private float GetItemWidth(GameObject item)
