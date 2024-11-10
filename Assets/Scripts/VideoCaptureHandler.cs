@@ -5,12 +5,17 @@ using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Windows.WebCam;
+using Microsoft.MixedReality.Toolkit.UI;
 #if WINDOWS_UWP && !UNITY_EDITOR
 using Windows.Storage;
 #endif
 
 public class VideoCaptureHandler : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject videoCaptureButton = null;
+
+    private Interactable videoCaptureButtonInteractable = null;
     private VideoCapture videoCapture = null;
 
 #if WINDOWS_UWP && !UNITY_EDITOR
@@ -37,7 +42,7 @@ public class VideoCaptureHandler : MonoBehaviour
             if (availableSpace < minAvailableSpace)
             {
                 Debug.LogWarning("Not enough storage space to continue recording. Saving video.");
-                videoCapture.StopRecordingAsync(OnStoppedRecordingVideo);
+                StopRecordingVideo();
             }
         }
         catch (Exception ex)
@@ -54,6 +59,17 @@ public class VideoCaptureHandler : MonoBehaviour
 #else
         VideoCapture.CreateAsync(false, OnVideoCaptureCreated);
 #endif
+        if (videoCaptureButtonInteractable == null)
+        {
+            videoCaptureButtonInteractable = videoCaptureButton.GetComponent<Interactable>();
+        }
+        videoCaptureButtonInteractable.IsToggled = true;
+    }
+
+    public void StopRecordingVideo()
+    {
+        videoCapture.StopRecordingAsync(OnStoppedRecordingVideo);
+        videoCaptureButtonInteractable.IsToggled = false;
     }
 
     public void ToggleRecordingVideo()
@@ -107,7 +123,7 @@ public class VideoCaptureHandler : MonoBehaviour
         }
         else
         {
-            Debug.LogError("Failed to create VideoCapture Instance");
+            Debug.LogError("Failed to create VideoCapture instance");
         }
     }
 
@@ -117,7 +133,7 @@ public class VideoCaptureHandler : MonoBehaviour
         {
             string filename = string.Format("WebView_{0}.mp4", DateTime.UtcNow.ToString("yyyy-MM-ddTHHmmssZ"));
             string filepath = Path.Combine(Application.persistentDataPath, filename);
-            Debug.Log("Saving Video to: " + filepath);
+            Debug.Log("Saving video to: " + filepath);
 
             videoCapture.StartRecordingAsync(filepath, OnStartedRecordingVideo);
         }
@@ -125,21 +141,15 @@ public class VideoCaptureHandler : MonoBehaviour
 
     private void OnStartedRecordingVideo(VideoCapture.VideoCaptureResult result)
     {
-        Debug.Log("Started Recording Video");
+        Debug.Log("Started recording video");
 #if WINDOWS_UWP && !UNITY_EDITOR
         StartCoroutine(CheckAvailableStorageSpace());
 #endif
     }
 
-    public void StopRecordingVideo()
-    {
-        Debug.Log("Stopping Video Recording");
-        videoCapture.StopRecordingAsync(OnStoppedRecordingVideo);
-    }
-
     private void OnStoppedRecordingVideo(VideoCapture.VideoCaptureResult result)
     {
-        Debug.Log("Stopped Recording Video");
+        Debug.Log("Stopped recording video");
         videoCapture.StopVideoModeAsync(OnStoppedVideoCaptureMode);
     }
 
