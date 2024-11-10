@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Windows.WebCam;
 #if WINDOWS_UWP && !UNITY_EDITOR
 using Windows.Storage;
@@ -12,32 +11,7 @@ using Windows.Storage;
 
 public class VideoCaptureHandler : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject recordingStatus = null;
-
-    private Coroutine blinkCoroutine = null;
-    private Image recordingImage = null;
     private VideoCapture videoCapture = null;
-
-    private IEnumerator BlinkLightRed()
-    {
-        if (recordingImage == null)
-        {
-            recordingImage = recordingStatus.GetComponentInChildren<Image>();
-        }
-
-        Color lightRed = new Color(1, 0.3f, 0.3f, 0.6f);
-        Color transparent = new Color(1, 0.3f, 0.3f, 0);
-
-        while (true)
-        {
-            recordingImage.color = lightRed;
-            yield return new WaitForSeconds(0.5f);
-
-            recordingImage.color = transparent;
-            yield return new WaitForSeconds(0.5f);
-        }
-    }
 
 #if WINDOWS_UWP && !UNITY_EDITOR
     private const string freeSpace = "System.FreeSpace";
@@ -155,18 +129,11 @@ public class VideoCaptureHandler : MonoBehaviour
 #if WINDOWS_UWP && !UNITY_EDITOR
         StartCoroutine(CheckAvailableStorageSpace());
 #endif
-        recordingStatus.SetActive(true);
-        blinkCoroutine = StartCoroutine(BlinkLightRed());
     }
 
     public void StopRecordingVideo()
     {
         Debug.Log("Stopping Video Recording");
-        if (blinkCoroutine != null)
-        {
-            StopCoroutine(blinkCoroutine);
-        }
-        recordingStatus.SetActive(false);
         videoCapture.StopRecordingAsync(OnStoppedRecordingVideo);
     }
 
