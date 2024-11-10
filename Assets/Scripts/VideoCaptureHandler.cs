@@ -13,15 +13,12 @@ public class VideoCaptureHandler : MonoBehaviour
 {
     private VideoCapture videoCapture = null;
 
-    const String k_freeSpace = "System.FreeSpace";
-    const String k_totalSpace = "System.Capacity";
-
 #if WINDOWS_UWP && !UNITY_EDITOR
-    private const UInt64 minAvailableSpace = 31UL * 1024 * 1024 * 1024; // 31 GB
+    private const string freeSpace = "System.FreeSpace";
+    private const UInt64 minAvailableSpace = 5UL * 1024 * 1024 * 1024; // 5GB
 
     private IEnumerator CheckAvailableStorageSpace()
     {
-        Debug.Log("Checking available storage space");
         while (videoCapture != null && videoCapture.IsRecording)
         {
             yield return CheckSpaceAndHandleRecording();
@@ -33,21 +30,11 @@ public class VideoCaptureHandler : MonoBehaviour
     {
         try
         {
-            // StorageFolder persistentDataFolder = await StorageFolder.GetFolderFromPathAsync(Application.persistentDataPath);
-            Debug.Log("Getting storage space");
-            // Debug.Log("Persistent Data Path: " + persistentDataFolder.Path);
-
             StorageFolder folder = ApplicationData.Current.TemporaryFolder;
-            var props = await folder.Properties.RetrievePropertiesAsync(new string[] { k_freeSpace, k_totalSpace });
-            Debug.Log("FreeSpace: " + (UInt64) props[k_freeSpace]);
-            Debug.Log("Capacity:  " + (UInt64) props[k_totalSpace]);
-            UInt64 freeSpace = (UInt64) props[k_freeSpace];
+            var props = await folder.Properties.RetrievePropertiesAsync(new string[] { freeSpace });
+            UInt64 availableSpace = (UInt64) props[freeSpace];
 
-            // var retrievedProperties = await persistentDataFolder.Properties.RetrievePropertiesAsync(new string[] { "System.FreeSpace" });
-            // var freeSpace = (UInt64)retrievedProperties["System.FreeSpace"];
-            // Debug.Log("Free Space: " + freeSpace);
-
-            if (freeSpace < minAvailableSpace)
+            if (availableSpace < minAvailableSpace)
             {
                 Debug.LogWarning("Not enough storage space to continue recording. Saving video.");
                 videoCapture.StopRecordingAsync(OnStoppedRecordingVideo);
