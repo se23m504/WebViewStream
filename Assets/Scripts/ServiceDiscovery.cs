@@ -346,6 +346,10 @@ public class ServiceDiscovery : MonoBehaviour
             while (serviceQueue.Count > 0)
             {
                 MdnsService service = serviceQueue.Dequeue();
+                if (service == null)
+                {
+                    continue;
+                }
                 Debug.Log($"Invoking action with: {service}");
                 action?.Invoke(service);
             }
