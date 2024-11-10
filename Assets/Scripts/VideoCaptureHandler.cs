@@ -101,7 +101,7 @@ public class VideoCaptureHandler : MonoBehaviour
 
             this.videoCapture.StartVideoModeAsync(
                 cameraParameters,
-                VideoCapture.AudioState.None,
+                VideoCapture.AudioState.ApplicationAndMicAudio,
                 OnStartedVideoCaptureMode
             );
         }
@@ -115,7 +115,7 @@ public class VideoCaptureHandler : MonoBehaviour
     {
         if (result.success)
         {
-            string filename = string.Format("WebView_{0}.mp4", Time.time);
+            string filename = string.Format("WebView_{0}.mp4", DateTime.UtcNow.ToString("yyyy-MM-ddTHHmmssZ"));
             string filepath = Path.Combine(Application.persistentDataPath, filename);
             Debug.Log("Saving Video to: " + filepath);
 
