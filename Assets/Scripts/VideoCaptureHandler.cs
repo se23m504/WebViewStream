@@ -1,10 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Windows.WebCam;
-using System.IO;
 #if WINDOWS_UWP && !UNITY_EDITOR
 using Windows.Storage;
 #endif
@@ -32,7 +32,7 @@ public class VideoCaptureHandler : MonoBehaviour
         {
             StorageFolder folder = ApplicationData.Current.TemporaryFolder;
             var props = await folder.Properties.RetrievePropertiesAsync(new string[] { freeSpace });
-            UInt64 availableSpace = (UInt64) props[freeSpace];
+            UInt64 availableSpace = (UInt64)props[freeSpace];
 
             if (availableSpace < minAvailableSpace)
             {
@@ -99,9 +99,11 @@ public class VideoCaptureHandler : MonoBehaviour
             cameraParameters.cameraResolutionHeight = cameraResolution.height;
             cameraParameters.pixelFormat = CapturePixelFormat.BGRA32;
 
-            this.videoCapture.StartVideoModeAsync(cameraParameters,
-                                                VideoCapture.AudioState.None,
-                                                OnStartedVideoCaptureMode);
+            this.videoCapture.StartVideoModeAsync(
+                cameraParameters,
+                VideoCapture.AudioState.None,
+                OnStartedVideoCaptureMode
+            );
         }
         else
         {
