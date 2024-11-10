@@ -68,11 +68,7 @@ public class ServicesListPopulator : MonoBehaviour
         foreach (Transform child in gridObjectCollection.transform)
         {
             TextMeshPro[] textMeshes = child.GetComponentsInChildren<TextMeshPro>();
-            if (
-                textMeshes.Length >= 2
-                && textMeshes[0].text == apiUrl
-                && textMeshes[1].text == hostname
-            )
+            if (textMeshes.Length >= 2 && textMeshes[0].text == apiUrl && textMeshes[1].text == hostname)
             {
                 Debug.Log($"Removing service from table: {service}");
                 Destroy(child.gameObject);

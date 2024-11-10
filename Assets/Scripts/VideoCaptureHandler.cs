@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 using UnityEngine.Windows.WebCam;
-using Microsoft.MixedReality.Toolkit.UI;
 #if WINDOWS_UWP && !UNITY_EDITOR
 using Windows.Storage;
 #endif
@@ -131,7 +131,10 @@ public class VideoCaptureHandler : MonoBehaviour
     {
         if (result.success)
         {
-            string filename = string.Format("WebView_{0}.mp4", DateTime.UtcNow.ToString("yyyy-MM-ddTHHmmssZ"));
+            string filename = string.Format(
+                "WebView_{0}.mp4",
+                DateTime.UtcNow.ToString("yyyy-MM-ddTHHmmssZ")
+            );
             string filepath = Path.Combine(Application.persistentDataPath, filename);
             Debug.Log("Saving video to: " + filepath);
 
