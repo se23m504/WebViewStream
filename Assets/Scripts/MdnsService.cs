@@ -5,6 +5,13 @@ public class MdnsService
     public string Path { get; }
     public string Host { get; }
 
+    /// <summary>
+    /// Represents a service discovered via mDNS.
+    /// </summary>
+    /// <param name="ipAddress"></param>
+    /// <param name="port"></param>
+    /// <param name="path"></param>
+    /// <param name="host"></param>
     public MdnsService(string ipAddress, int port, string path, string host)
     {
         IpAddress = ipAddress;

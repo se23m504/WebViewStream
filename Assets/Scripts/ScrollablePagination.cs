@@ -6,6 +6,10 @@ public class ScrollablePagination : MonoBehaviour
     [SerializeField]
     private ScrollingObjectCollection scrollView;
 
+    /// <summary>
+    /// Scrolls the collection by a specified amount.
+    /// </summary>
+    /// <param name="amount"></param>
     public void ScrollByTier(int amount)
     {
         if (scrollView == null)

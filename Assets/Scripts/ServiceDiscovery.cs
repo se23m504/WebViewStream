@@ -68,6 +68,10 @@ public class ServiceDiscovery : MonoBehaviour
         return localIPs;
     }
 
+    /// <summary>
+    /// Starts listening for mDNS service announcements.
+    /// </summary>
+    /// <param name="action"></param>
     public void StartListening(Action<MdnsService> action)
     {
         try

@@ -49,6 +49,9 @@ public class VideoCaptureHandler : MonoBehaviour
     }
 #endif
 
+    /// <summary>
+    /// Starts recording a video.
+    /// </summary>
     public void StartRecordingVideo()
     {
 #if WINDOWS_UWP && !UNITY_EDITOR
@@ -63,12 +66,18 @@ public class VideoCaptureHandler : MonoBehaviour
         videoCaptureButtonInteractable.IsToggled = true;
     }
 
+    /// <summary>
+    /// Stops recording a video.
+    /// </summary>
     public void StopRecordingVideo()
     {
         videoCapture.StopRecordingAsync(OnStoppedRecordingVideo);
         videoCaptureButtonInteractable.IsToggled = false;
     }
 
+    /// <summary>
+    /// Toggles the recording of a video.
+    /// </summary>
     public void ToggleRecordingVideo()
     {
         if (videoCapture == null)

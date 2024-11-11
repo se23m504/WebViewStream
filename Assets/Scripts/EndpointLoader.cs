@@ -79,6 +79,9 @@ public class EndpointLoader : MonoBehaviour
         return cameraTransform.position + cameraTransform.TransformDirection(localOffset);
     }
 
+    /// <summary>
+    /// Toggles the visibility of the items spawned by this script.
+    /// </summary>
     public void ToggleItemsVisibility()
     {
         areItemsVisible = !areItemsVisible;
@@ -88,6 +91,11 @@ public class EndpointLoader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns the width of the item in world space units.
+    /// </summary>
+    /// <param name="item"></param>
+    /// <returns></returns>
     public float GetItemWidth(GameObject item)
     {
         RectTransform rectTransform = item.GetComponent<RectTransform>();
@@ -99,6 +107,10 @@ public class EndpointLoader : MonoBehaviour
         return 0.8f;
     }
 
+    /// <summary>
+    /// Spawns a new item with a WebView component and loads the specified URL.
+    /// </summary>
+    /// <param name="url"></param>
     public void SpawnItem(string url)
     {
         if (dynamicItem != null)
@@ -130,6 +142,10 @@ public class EndpointLoader : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Returns a list of all items instantiated by this script.
+    /// </summary>
+    /// <returns></returns>
     public List<GameObject> GetInstantiatedItems()
     {
         return instantiatedItems;
@@ -287,12 +303,18 @@ public class EndpointLoader : MonoBehaviour
         );
     }
 
+    /// <summary>
+    /// Clears the list of available services.
+    /// </summary>
     public void ClearServices()
     {
         availableServices.Clear();
         servicesListPopulator.RemoveAllItems();
     }
 
+    /// <summary>
+    /// Reloads the list of available services.
+    /// </summary>
     public void ReloadEndpoints()
     {
         triedMulticast = false;

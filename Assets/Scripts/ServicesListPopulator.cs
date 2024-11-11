@@ -20,6 +20,11 @@ public class ServicesListPopulator : MonoBehaviour
     private const string apiUrlPrefix = "API URL: ";
     private const string hostPrefix = "Host: ";
 
+    /// <summary>
+    /// Adds an item to the table from a service.
+    /// </summary>
+    /// <param name="service"></param>
+    /// <param name="action"></param>
     public void AddItemFromService(MdnsService service, Action action)
     {
         GameObject itemInstance = Instantiate(dynamicItem, gridObjectCollection.transform);
@@ -47,6 +52,9 @@ public class ServicesListPopulator : MonoBehaviour
         scrollView.UpdateContent();
     }
 
+    /// <summary>
+    /// Removes all items from the table.
+    /// </summary>
     public void RemoveAllItems()
     {
         foreach (Transform child in gridObjectCollection.transform)
@@ -59,6 +67,10 @@ public class ServicesListPopulator : MonoBehaviour
         scrollView.UpdateContent();
     }
 
+    /// <summary>
+    /// Removes an item from the table by service.
+    /// </summary>
+    /// <param name="service"></param>
     public void RemoveItemByService(MdnsService service)
     {
         string apiUrl = $"{apiUrlPrefix}http://{service.IpAddress}:{service.Port}{service.Path}";
@@ -79,6 +91,9 @@ public class ServicesListPopulator : MonoBehaviour
         scrollView.UpdateContent();
     }
 
+    /// <summary>
+    /// Toggles the visibility of the table.
+    /// </summary>
     public void ToggleVisibility()
     {
         isVisible = !isVisible;

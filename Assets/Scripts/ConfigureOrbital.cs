@@ -9,6 +9,9 @@ public class ConfigureOrbital : MonoBehaviour
 
     private bool orbitalEnabled = false;
 
+    /// <summary>
+    /// Toggles the orbital behavior (solver) of the canvases.
+    /// </summary>
     public void ToggleOrbital()
     {
         orbitalEnabled = !orbitalEnabled;
@@ -42,6 +45,9 @@ public class ConfigureOrbital : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Rotates the canvases to face the user.
+    /// </summary>
     public void RotateCanvasToFaceUser()
     {
         List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
@@ -53,6 +59,9 @@ public class ConfigureOrbital : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Centers the canvases in front of the user.
+    /// </summary>
     public void CenterCanvasesToUser()
     {
         List<GameObject> canvases = endpointLoader.GetInstantiatedItems();

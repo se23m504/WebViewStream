@@ -9,6 +9,9 @@ public class ConfigureNavBar : MonoBehaviour
 
     private bool isVisible = false;
 
+    /// <summary>
+    /// Toggles the visibility of the address field in the nav bar.
+    /// </summary>
     public void ToggleVisibilityMethod()
     {
         List<GameObject> canvases = endpointLoader.GetInstantiatedItems();

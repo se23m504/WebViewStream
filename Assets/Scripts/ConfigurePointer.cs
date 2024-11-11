@@ -5,6 +5,9 @@ public class ConfigurePointer : MonoBehaviour
 {
     private bool handRayPointerEnabled = true;
 
+    /// <summary>
+    /// Toggles the hand ray pointer on and off.
+    /// </summary>
     public void ToggleHandRayPointer()
     {
         if (handRayPointerEnabled)
@@ -19,12 +22,12 @@ public class ConfigurePointer : MonoBehaviour
         }
     }
 
-    public void EnableHandRayPointer()
+    private void EnableHandRayPointer()
     {
         PointerUtils.SetHandRayPointerBehavior(PointerBehavior.AlwaysOn);
     }
 
-    public void DisableHandRayPointer()
+    private void DisableHandRayPointer()
     {
         PointerUtils.SetHandRayPointerBehavior(PointerBehavior.AlwaysOff);
     }
