@@ -18,37 +18,37 @@ namespace WebViewStream
         private VideoCapture videoCapture = null;
 
 #if WINDOWS_UWP && !UNITY_EDITOR
-    private const string freeSpace = "System.FreeSpace";
-    private const UInt64 minAvailableSpace = 5UL * 1024 * 1024 * 1024; // 5GB
+        private const string freeSpace = "System.FreeSpace";
+        private const UInt64 minAvailableSpace = 5UL * 1024 * 1024 * 1024; // 5GB
 
-    private IEnumerator CheckAvailableStorageSpace()
-    {
-        while (videoCapture != null && videoCapture.IsRecording)
+        private IEnumerator CheckAvailableStorageSpace()
         {
-            yield return CheckSpaceAndHandleRecording();
-            yield return new WaitForSeconds(5);
-        }
-    }
-
-    private async Task CheckSpaceAndHandleRecording()
-    {
-        try
-        {
-            StorageFolder folder = ApplicationData.Current.TemporaryFolder;
-            var props = await folder.Properties.RetrievePropertiesAsync(new string[] { freeSpace });
-            UInt64 availableSpace = (UInt64)props[freeSpace];
-
-            if (availableSpace < minAvailableSpace)
+            while (videoCapture != null && videoCapture.IsRecording)
             {
-                Debug.LogWarning("Not enough storage space to continue recording. Saving video.");
-                StopRecordingVideo();
+                yield return CheckSpaceAndHandleRecording();
+                yield return new WaitForSeconds(5);
             }
         }
-        catch (Exception ex)
+
+        private async Task CheckSpaceAndHandleRecording()
         {
-            Debug.LogError("Error checking storage space: " + ex.Message);
+            try
+            {
+                StorageFolder folder = ApplicationData.Current.TemporaryFolder;
+                var props = await folder.Properties.RetrievePropertiesAsync(new string[] { freeSpace });
+                UInt64 availableSpace = (UInt64)props[freeSpace];
+
+                if (availableSpace < minAvailableSpace)
+                {
+                    Debug.LogWarning("Not enough storage space to continue recording. Saving video.");
+                    StopRecordingVideo();
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError("Error checking storage space: " + ex.Message);
+            }
         }
-    }
 #endif
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace WebViewStream
         public void StartRecordingVideo()
         {
 #if WINDOWS_UWP && !UNITY_EDITOR
-        VideoCapture.CreateAsync(true, OnVideoCaptureCreated);
+            VideoCapture.CreateAsync(true, OnVideoCaptureCreated);
 #else
             VideoCapture.CreateAsync(false, OnVideoCaptureCreated);
 #endif
@@ -101,14 +101,19 @@ namespace WebViewStream
                 Resolution cameraResolution = new Resolution();
                 foreach (Resolution resolution in VideoCapture.SupportedResolutions)
                 {
-                    if (resolution.width * resolution.height > cameraResolution.width * cameraResolution.height)
+                    if (
+                        resolution.width * resolution.height
+                        > cameraResolution.width * cameraResolution.height
+                    )
                     {
                         cameraResolution = resolution;
                     }
                 }
 
                 float cameraFramerate = 0.0f;
-                foreach (float framerate in VideoCapture.GetSupportedFrameRatesForResolution(cameraResolution))
+                foreach (
+                    float framerate in VideoCapture.GetSupportedFrameRatesForResolution(cameraResolution)
+                )
                 {
                     if (framerate > cameraFramerate)
                     {
@@ -154,7 +159,7 @@ namespace WebViewStream
         {
             Debug.Log("Started recording video");
 #if WINDOWS_UWP && !UNITY_EDITOR
-        StartCoroutine(CheckAvailableStorageSpace());
+            StartCoroutine(CheckAvailableStorageSpace());
 #endif
         }
 

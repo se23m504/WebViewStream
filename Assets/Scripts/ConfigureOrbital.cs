@@ -76,7 +76,10 @@ namespace WebViewStream
 
                 canvas.transform.position =
                     cameraTransform.position + cameraTransform.TransformDirection(localOffset);
-                canvas.transform.rotation = Quaternion.LookRotation(cameraTransform.forward, cameraTransform.up);
+                canvas.transform.rotation = Quaternion.LookRotation(
+                    cameraTransform.forward,
+                    cameraTransform.up
+                );
 
                 localOffset = new Vector3(
                     localOffset.x + endpointLoader.GetItemWidth(canvas),

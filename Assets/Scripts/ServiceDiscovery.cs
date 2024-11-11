@@ -86,7 +86,11 @@ namespace WebViewStream
                 }
 
                 udpClient = new UdpClient();
-                udpClient.Client.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
+                udpClient.Client.SetSocketOption(
+                    SocketOptionLevel.Socket,
+                    SocketOptionName.ReuseAddress,
+                    true
+                );
                 udpClient.Client.Bind(new IPEndPoint(defaultIP, multicastPort));
                 udpClient.JoinMulticastGroup(IPAddress.Parse(multicastAddress), defaultIP);
 
@@ -109,7 +113,11 @@ namespace WebViewStream
             byte[] query = CreateMdnsQuery(serviceName);
             Debug.Log($"Sending mDNS query for {serviceName}");
 
-            udpClient.Send(query, query.Length, new IPEndPoint(IPAddress.Parse(multicastAddress), multicastPort));
+            udpClient.Send(
+                query,
+                query.Length,
+                new IPEndPoint(IPAddress.Parse(multicastAddress), multicastPort)
+            );
         }
 
         private byte[] CreateMdnsQuery(string serviceName)
@@ -262,7 +270,9 @@ namespace WebViewStream
 
             if (recordType == 1) // A Record
             {
-                IPAddress ipAddress = new IPAddress(new ArraySegment<byte>(data, offset, dataLength).ToArray());
+                IPAddress ipAddress = new IPAddress(
+                    new ArraySegment<byte>(data, offset, dataLength).ToArray()
+                );
                 receivedIp = ipAddress.ToString();
                 receivedHost = name;
             }

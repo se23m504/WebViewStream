@@ -30,7 +30,11 @@ namespace WebViewStream
                 BoxCollider boxCollider = canvas.GetComponent<BoxCollider>();
                 if (boxCollider != null)
                 {
-                    boxCollider.size = new Vector3(boxCollider.size.x, isVisible ? 400 : 370, boxCollider.size.z);
+                    boxCollider.size = new Vector3(
+                        boxCollider.size.x,
+                        isVisible ? 400 : 370,
+                        boxCollider.size.z
+                    );
                     boxCollider.center = new Vector3(0, isVisible ? 0 : -16, 0);
                 }
             }
