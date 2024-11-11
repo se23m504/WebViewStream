@@ -100,3 +100,5 @@ eol-changed.txt
 .idea
 
 Debug*
+
+.vsconfig
