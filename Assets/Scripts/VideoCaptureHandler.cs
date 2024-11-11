@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
 using Microsoft.MixedReality.Toolkit.UI;
+using System;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Windows.WebCam;
 #if WINDOWS_UWP && !UNITY_EDITOR

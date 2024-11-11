@@ -1,10 +1,9 @@
+using Microsoft.MixedReality.WebView;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Microsoft.MixedReality.WebView;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
 public class EndpointLoader : MonoBehaviour
 {
@@ -89,7 +88,7 @@ public class EndpointLoader : MonoBehaviour
         }
     }
 
-    private float GetItemWidth(GameObject item)
+    public float GetItemWidth(GameObject item)
     {
         RectTransform rectTransform = item.GetComponent<RectTransform>();
         if (rectTransform != null)

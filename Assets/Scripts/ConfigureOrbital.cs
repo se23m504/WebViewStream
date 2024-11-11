@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using Microsoft.MixedReality.Toolkit;
-using Microsoft.MixedReality.Toolkit.Utilities;
 using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ConfigureOrbital : MonoBehaviour
@@ -70,18 +67,7 @@ public class ConfigureOrbital : MonoBehaviour
                 cameraTransform.position + cameraTransform.TransformDirection(localOffset);
             canvas.transform.rotation = Quaternion.LookRotation(cameraTransform.forward, cameraTransform.up);
 
-            localOffset = new Vector3(localOffset.x + GetItemWidth(canvas), localOffset.y, localOffset.z);
+            localOffset = new Vector3(localOffset.x + endpointLoader.GetItemWidth(canvas), localOffset.y, localOffset.z);
         }
-    }
-
-    private float GetItemWidth(GameObject item)
-    {
-        RectTransform rectTransform = item.GetComponent<RectTransform>();
-        if (rectTransform != null)
-        {
-            return rectTransform.rect.width * rectTransform.lossyScale.x + 0.2f;
-        }
-
-        return 0.8f;
     }
 }
