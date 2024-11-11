@@ -1,6 +1,6 @@
-# WebView
+# WebViewStream
 
-WebView is a Unity-based HoloLens 2 application for high-quality, low-latency WebRTC streaming from multiple endpoints, optimized with Microsoft's Mixed Reality Toolkit (MRTK) and WebView package. It offers an extensible, high-performance streaming setup that can scale to multiple streams, limited only by the HoloLens 2 hardware.
+WebViewStream is a Unity-based HoloLens 2 application for high-quality, low-latency WebRTC streaming from multiple endpoints, optimized with Microsoft's Mixed Reality Toolkit (MRTK) and WebView package. It offers an extensible, high-performance streaming setup that can scale to multiple streams, limited only by the HoloLens 2 hardware.
 
 ## Features
 
