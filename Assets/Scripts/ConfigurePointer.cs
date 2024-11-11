@@ -1,34 +1,37 @@
 using Microsoft.MixedReality.Toolkit.Input;
 using UnityEngine;
 
-public class ConfigurePointer : MonoBehaviour
+namespace WebViewStream
 {
-    private bool handRayPointerEnabled = true;
-
-    /// <summary>
-    /// Toggles the hand ray pointer on and off.
-    /// </summary>
-    public void ToggleHandRayPointer()
+    public class ConfigurePointer : MonoBehaviour
     {
-        if (handRayPointerEnabled)
+        private bool handRayPointerEnabled = true;
+
+        /// <summary>
+        /// Toggles the hand ray pointer on and off.
+        /// </summary>
+        public void ToggleHandRayPointer()
         {
-            DisableHandRayPointer();
-            handRayPointerEnabled = false;
+            if (handRayPointerEnabled)
+            {
+                DisableHandRayPointer();
+                handRayPointerEnabled = false;
+            }
+            else
+            {
+                EnableHandRayPointer();
+                handRayPointerEnabled = true;
+            }
         }
-        else
+
+        private void EnableHandRayPointer()
         {
-            EnableHandRayPointer();
-            handRayPointerEnabled = true;
+            PointerUtils.SetHandRayPointerBehavior(PointerBehavior.AlwaysOn);
         }
-    }
 
-    private void EnableHandRayPointer()
-    {
-        PointerUtils.SetHandRayPointerBehavior(PointerBehavior.AlwaysOn);
-    }
-
-    private void DisableHandRayPointer()
-    {
-        PointerUtils.SetHandRayPointerBehavior(PointerBehavior.AlwaysOff);
+        private void DisableHandRayPointer()
+        {
+            PointerUtils.SetHandRayPointerBehavior(PointerBehavior.AlwaysOff);
+        }
     }
 }

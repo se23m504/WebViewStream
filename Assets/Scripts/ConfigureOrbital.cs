@@ -2,85 +2,88 @@ using System.Collections.Generic;
 using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
 using UnityEngine;
 
-public class ConfigureOrbital : MonoBehaviour
+namespace WebViewStream
 {
-    [SerializeField]
-    private EndpointLoader endpointLoader;
-
-    private bool orbitalEnabled = false;
-
-    /// <summary>
-    /// Toggles the orbital behavior (solver) of the canvases.
-    /// </summary>
-    public void ToggleOrbital()
+    public class ConfigureOrbital : MonoBehaviour
     {
-        orbitalEnabled = !orbitalEnabled;
-        List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
+        [SerializeField]
+        private EndpointLoader endpointLoader;
 
-        foreach (GameObject canvas in canvases)
+        private bool orbitalEnabled = false;
+
+        /// <summary>
+        /// Toggles the orbital behavior (solver) of the canvases.
+        /// </summary>
+        public void ToggleOrbital()
         {
-            Orbital orbital = canvas.GetComponent<Orbital>();
-            SolverHandler solverHandler = canvas.GetComponent<SolverHandler>();
+            orbitalEnabled = !orbitalEnabled;
+            List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
 
-            if (orbital != null && solverHandler != null)
+            foreach (GameObject canvas in canvases)
             {
-                orbital.enabled = orbitalEnabled;
+                Orbital orbital = canvas.GetComponent<Orbital>();
+                SolverHandler solverHandler = canvas.GetComponent<SolverHandler>();
 
-                if (orbitalEnabled)
+                if (orbital != null && solverHandler != null)
                 {
-                    Vector3 headPosition = Camera.main.transform.position;
-                    Quaternion headRotation = Camera.main.transform.rotation;
-                    Vector3 relativePosition =
-                        Quaternion.Inverse(headRotation) * (orbital.transform.position - headPosition);
+                    orbital.enabled = orbitalEnabled;
 
-                    orbital.LocalOffset = relativePosition;
+                    if (orbitalEnabled)
+                    {
+                        Vector3 headPosition = Camera.main.transform.position;
+                        Quaternion headRotation = Camera.main.transform.rotation;
+                        Vector3 relativePosition =
+                            Quaternion.Inverse(headRotation) * (orbital.transform.position - headPosition);
 
-                    solverHandler.UpdateSolvers = true;
-                }
-                else
-                {
-                    solverHandler.UpdateSolvers = false;
+                        orbital.LocalOffset = relativePosition;
+
+                        solverHandler.UpdateSolvers = true;
+                    }
+                    else
+                    {
+                        solverHandler.UpdateSolvers = false;
+                    }
                 }
             }
         }
-    }
 
-    /// <summary>
-    /// Rotates the canvases to face the user.
-    /// </summary>
-    public void RotateCanvasToFaceUser()
-    {
-        List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
-
-        foreach (GameObject canvas in canvases)
+        /// <summary>
+        /// Rotates the canvases to face the user.
+        /// </summary>
+        public void RotateCanvasToFaceUser()
         {
-            Vector3 directionToCamera = canvas.transform.position - Camera.main.transform.position;
-            canvas.transform.rotation = Quaternion.LookRotation(directionToCamera);
+            List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
+
+            foreach (GameObject canvas in canvases)
+            {
+                Vector3 directionToCamera = canvas.transform.position - Camera.main.transform.position;
+                canvas.transform.rotation = Quaternion.LookRotation(directionToCamera);
+            }
         }
-    }
 
-    /// <summary>
-    /// Centers the canvases in front of the user.
-    /// </summary>
-    public void CenterCanvasesToUser()
-    {
-        List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
-
-        Vector3 localOffset = new Vector3(-0.4f, 0.1f, 1f);
-
-        foreach (GameObject canvas in canvases)
+        /// <summary>
+        /// Centers the canvases in front of the user.
+        /// </summary>
+        public void CenterCanvasesToUser()
         {
-            Transform cameraTransform = Camera.main.transform;
+            List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
 
-            canvas.transform.position =
-                cameraTransform.position + cameraTransform.TransformDirection(localOffset);
-            canvas.transform.rotation = Quaternion.LookRotation(cameraTransform.forward, cameraTransform.up);
+            Vector3 localOffset = new Vector3(-0.4f, 0.1f, 1f);
 
-            localOffset = new Vector3(
-                localOffset.x + endpointLoader.GetItemWidth(canvas),
-                localOffset.y,
-                localOffset.z
-            );
+            foreach (GameObject canvas in canvases)
+            {
+                Transform cameraTransform = Camera.main.transform;
+
+                canvas.transform.position =
+                    cameraTransform.position + cameraTransform.TransformDirection(localOffset);
+                canvas.transform.rotation = Quaternion.LookRotation(cameraTransform.forward, cameraTransform.up);
+
+                localOffset = new Vector3(
+                    localOffset.x + endpointLoader.GetItemWidth(canvas),
+                    localOffset.y,
+                    localOffset.z
+                );
+            }
         }
     }
 }

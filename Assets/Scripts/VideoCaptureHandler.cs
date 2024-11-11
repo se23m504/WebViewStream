@@ -7,13 +7,15 @@ using UnityEngine.Windows.WebCam;
 using Windows.Storage;
 #endif
 
-public class VideoCaptureHandler : MonoBehaviour
+namespace WebViewStream
 {
-    [SerializeField]
-    private GameObject videoCaptureButton = null;
+    public class VideoCaptureHandler : MonoBehaviour
+    {
+        [SerializeField]
+        private GameObject videoCaptureButton = null;
 
-    private Interactable videoCaptureButtonInteractable = null;
-    private VideoCapture videoCapture = null;
+        private Interactable videoCaptureButtonInteractable = null;
+        private VideoCapture videoCapture = null;
 
 #if WINDOWS_UWP && !UNITY_EDITOR
     private const string freeSpace = "System.FreeSpace";
@@ -49,122 +51,123 @@ public class VideoCaptureHandler : MonoBehaviour
     }
 #endif
 
-    /// <summary>
-    /// Starts recording a video.
-    /// </summary>
-    public void StartRecordingVideo()
-    {
+        /// <summary>
+        /// Starts recording a video.
+        /// </summary>
+        public void StartRecordingVideo()
+        {
 #if WINDOWS_UWP && !UNITY_EDITOR
         VideoCapture.CreateAsync(true, OnVideoCaptureCreated);
 #else
-        VideoCapture.CreateAsync(false, OnVideoCaptureCreated);
+            VideoCapture.CreateAsync(false, OnVideoCaptureCreated);
 #endif
-        if (videoCaptureButtonInteractable == null)
-        {
-            videoCaptureButtonInteractable = videoCaptureButton.GetComponent<Interactable>();
-        }
-        videoCaptureButtonInteractable.IsToggled = true;
-    }
-
-    /// <summary>
-    /// Stops recording a video.
-    /// </summary>
-    public void StopRecordingVideo()
-    {
-        videoCapture.StopRecordingAsync(OnStoppedRecordingVideo);
-        videoCaptureButtonInteractable.IsToggled = false;
-    }
-
-    /// <summary>
-    /// Toggles the recording of a video.
-    /// </summary>
-    public void ToggleRecordingVideo()
-    {
-        if (videoCapture == null)
-        {
-            StartRecordingVideo();
-        }
-        else if (videoCapture.IsRecording)
-        {
-            StopRecordingVideo();
-        }
-    }
-
-    private void OnVideoCaptureCreated(VideoCapture videoCapture)
-    {
-        if (videoCapture != null)
-        {
-            this.videoCapture = videoCapture;
-
-            Resolution cameraResolution = new Resolution();
-            foreach (Resolution resolution in VideoCapture.SupportedResolutions)
+            if (videoCaptureButtonInteractable == null)
             {
-                if (resolution.width * resolution.height > cameraResolution.width * cameraResolution.height)
-                {
-                    cameraResolution = resolution;
-                }
+                videoCaptureButtonInteractable = videoCaptureButton.GetComponent<Interactable>();
             }
+            videoCaptureButtonInteractable.IsToggled = true;
+        }
 
-            float cameraFramerate = 0.0f;
-            foreach (float framerate in VideoCapture.GetSupportedFrameRatesForResolution(cameraResolution))
+        /// <summary>
+        /// Stops recording a video.
+        /// </summary>
+        public void StopRecordingVideo()
+        {
+            videoCapture.StopRecordingAsync(OnStoppedRecordingVideo);
+            videoCaptureButtonInteractable.IsToggled = false;
+        }
+
+        /// <summary>
+        /// Toggles the recording of a video.
+        /// </summary>
+        public void ToggleRecordingVideo()
+        {
+            if (videoCapture == null)
             {
-                if (framerate > cameraFramerate)
-                {
-                    cameraFramerate = framerate;
-                }
+                StartRecordingVideo();
             }
-
-            CameraParameters cameraParameters = new CameraParameters();
-            cameraParameters.hologramOpacity = 0.75f;
-            cameraParameters.frameRate = cameraFramerate;
-            cameraParameters.cameraResolutionWidth = cameraResolution.width;
-            cameraParameters.cameraResolutionHeight = cameraResolution.height;
-            cameraParameters.pixelFormat = CapturePixelFormat.BGRA32;
-
-            this.videoCapture.StartVideoModeAsync(
-                cameraParameters,
-                VideoCapture.AudioState.ApplicationAndMicAudio,
-                OnStartedVideoCaptureMode
-            );
+            else if (videoCapture.IsRecording)
+            {
+                StopRecordingVideo();
+            }
         }
-        else
+
+        private void OnVideoCaptureCreated(VideoCapture videoCapture)
         {
-            Debug.LogError("Failed to create VideoCapture instance");
-        }
-    }
+            if (videoCapture != null)
+            {
+                this.videoCapture = videoCapture;
 
-    private void OnStartedVideoCaptureMode(VideoCapture.VideoCaptureResult result)
-    {
-        if (result.success)
+                Resolution cameraResolution = new Resolution();
+                foreach (Resolution resolution in VideoCapture.SupportedResolutions)
+                {
+                    if (resolution.width * resolution.height > cameraResolution.width * cameraResolution.height)
+                    {
+                        cameraResolution = resolution;
+                    }
+                }
+
+                float cameraFramerate = 0.0f;
+                foreach (float framerate in VideoCapture.GetSupportedFrameRatesForResolution(cameraResolution))
+                {
+                    if (framerate > cameraFramerate)
+                    {
+                        cameraFramerate = framerate;
+                    }
+                }
+
+                CameraParameters cameraParameters = new CameraParameters();
+                cameraParameters.hologramOpacity = 0.75f;
+                cameraParameters.frameRate = cameraFramerate;
+                cameraParameters.cameraResolutionWidth = cameraResolution.width;
+                cameraParameters.cameraResolutionHeight = cameraResolution.height;
+                cameraParameters.pixelFormat = CapturePixelFormat.BGRA32;
+
+                this.videoCapture.StartVideoModeAsync(
+                    cameraParameters,
+                    VideoCapture.AudioState.ApplicationAndMicAudio,
+                    OnStartedVideoCaptureMode
+                );
+            }
+            else
+            {
+                Debug.LogError("Failed to create VideoCapture instance");
+            }
+        }
+
+        private void OnStartedVideoCaptureMode(VideoCapture.VideoCaptureResult result)
         {
-            string filename = string.Format(
-                "WebView_{0}.mp4",
-                DateTime.UtcNow.ToString("yyyy-MM-ddTHHmmssZ")
-            );
-            string filepath = Path.Combine(Application.persistentDataPath, filename);
-            Debug.Log("Saving video to: " + filepath);
+            if (result.success)
+            {
+                string filename = string.Format(
+                    "WebView_{0}.mp4",
+                    DateTime.UtcNow.ToString("yyyy-MM-ddTHHmmssZ")
+                );
+                string filepath = Path.Combine(Application.persistentDataPath, filename);
+                Debug.Log("Saving video to: " + filepath);
 
-            videoCapture.StartRecordingAsync(filepath, OnStartedRecordingVideo);
+                videoCapture.StartRecordingAsync(filepath, OnStartedRecordingVideo);
+            }
         }
-    }
 
-    private void OnStartedRecordingVideo(VideoCapture.VideoCaptureResult result)
-    {
-        Debug.Log("Started recording video");
+        private void OnStartedRecordingVideo(VideoCapture.VideoCaptureResult result)
+        {
+            Debug.Log("Started recording video");
 #if WINDOWS_UWP && !UNITY_EDITOR
         StartCoroutine(CheckAvailableStorageSpace());
 #endif
-    }
+        }
 
-    private void OnStoppedRecordingVideo(VideoCapture.VideoCaptureResult result)
-    {
-        Debug.Log("Stopped recording video");
-        videoCapture.StopVideoModeAsync(OnStoppedVideoCaptureMode);
-    }
+        private void OnStoppedRecordingVideo(VideoCapture.VideoCaptureResult result)
+        {
+            Debug.Log("Stopped recording video");
+            videoCapture.StopVideoModeAsync(OnStoppedVideoCaptureMode);
+        }
 
-    private void OnStoppedVideoCaptureMode(VideoCapture.VideoCaptureResult result)
-    {
-        videoCapture.Dispose();
-        videoCapture = null;
+        private void OnStoppedVideoCaptureMode(VideoCapture.VideoCaptureResult result)
+        {
+            videoCapture.Dispose();
+            videoCapture = null;
+        }
     }
 }

@@ -2,23 +2,26 @@ using Microsoft.MixedReality.Toolkit;
 using Microsoft.MixedReality.Toolkit.SpatialAwareness;
 using UnityEngine;
 
-public class ConfigureObservers : MonoBehaviour
+namespace WebViewStream
 {
-    private IMixedRealitySpatialAwarenessSystem spatialAwarenessSystem;
-
-    private void Start()
+    public class ConfigureObservers : MonoBehaviour
     {
-        spatialAwarenessSystem =
-            MixedRealityToolkit.Instance.GetService<IMixedRealitySpatialAwarenessSystem>();
+        private IMixedRealitySpatialAwarenessSystem spatialAwarenessSystem;
 
-        if (spatialAwarenessSystem != null)
+        private void Start()
         {
-            spatialAwarenessSystem.SuspendObservers();
-            Debug.Log("Spatial observers suspended");
-        }
-        else
-        {
-            Debug.LogWarning("SAS is not available");
+            spatialAwarenessSystem =
+                MixedRealityToolkit.Instance.GetService<IMixedRealitySpatialAwarenessSystem>();
+
+            if (spatialAwarenessSystem != null)
+            {
+                spatialAwarenessSystem.SuspendObservers();
+                Debug.Log("Spatial observers suspended");
+            }
+            else
+            {
+                Debug.LogWarning("SAS is not available");
+            }
         }
     }
 }

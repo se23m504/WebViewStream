@@ -2,35 +2,38 @@ using System;
 using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 
-public class DialogHandler : MonoBehaviour
+namespace WebViewStream
 {
-    [SerializeField]
-    private GameObject dialogPrefab;
-
-    /// <summary>
-    /// Opens a dialog with a title, question, and action.
-    /// </summary>
-    /// <param name="title"></param>
-    /// <param name="question"></param>
-    /// <param name="action"></param>
-    public void OpenDialog(string title, string question, Action action)
+    public class DialogHandler : MonoBehaviour
     {
-        Dialog dialog = Dialog.Open(
-            dialogPrefab,
-            DialogButtonType.Yes | DialogButtonType.No,
-            title,
-            question,
-            true
-        );
-        if (dialog != null)
+        [SerializeField]
+        private GameObject dialogPrefab;
+
+        /// <summary>
+        /// Opens a dialog with a title, question, and action.
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="question"></param>
+        /// <param name="action"></param>
+        public void OpenDialog(string title, string question, Action action)
         {
-            dialog.OnClosed += (x) =>
+            Dialog dialog = Dialog.Open(
+                dialogPrefab,
+                DialogButtonType.Yes | DialogButtonType.No,
+                title,
+                question,
+                true
+            );
+            if (dialog != null)
             {
-                if (x.Result == DialogButtonType.Yes)
+                dialog.OnClosed += (x) =>
                 {
-                    action?.Invoke();
-                }
-            };
+                    if (x.Result == DialogButtonType.Yes)
+                    {
+                        action?.Invoke();
+                    }
+                };
+            }
         }
     }
 }
