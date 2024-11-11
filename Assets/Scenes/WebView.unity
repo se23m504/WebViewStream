@@ -19709,8 +19709,8 @@ MonoBehaviour:
   smoothing: 1
   lifetime: 0
   referenceDirection: 1
-  minDistance: 0.4
-  maxDistance: 1
+  minDistance: 0.3
+  maxDistance: 0.7
   minViewDegrees: 0
   maxViewDegrees: 25
   aspectV: 1
@@ -19941,7 +19941,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   updateLinkedTransform: 0
-  moveLerpTime: 0.3
+  moveLerpTime: 0.5
   rotateLerpTime: 0.1
   scaleLerpTime: 0
   maintainScaleOnInitialization: 1
