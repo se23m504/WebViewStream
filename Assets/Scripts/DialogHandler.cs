@@ -1,5 +1,5 @@
-using Microsoft.MixedReality.Toolkit.UI;
 using System;
+using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 
 public class DialogHandler : MonoBehaviour

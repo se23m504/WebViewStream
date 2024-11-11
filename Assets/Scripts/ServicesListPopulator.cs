@@ -1,6 +1,6 @@
-﻿using Microsoft.MixedReality.Toolkit.UI;
+﻿using System;
+using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.Utilities;
-using System;
 using TMPro;
 using UnityEngine;
 

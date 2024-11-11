@@ -1,6 +1,6 @@
-using Microsoft.MixedReality.Toolkit.UI;
 using System;
 using System.IO;
+using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 using UnityEngine.Windows.WebCam;
 #if WINDOWS_UWP && !UNITY_EDITOR
