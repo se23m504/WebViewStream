@@ -68,7 +68,7 @@ namespace WebViewStream
         {
             List<GameObject> canvases = endpointLoader.GetInstantiatedItems();
 
-            Vector3 localOffset = new Vector3(-0.4f, 0.1f, 1f);
+            Vector3 localOffset = new Vector3(-0.3f, 0.1f, 1.5f);
 
             foreach (GameObject canvas in canvases)
             {

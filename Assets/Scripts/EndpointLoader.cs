@@ -69,7 +69,7 @@ namespace WebViewStream
         private Vector3 CalculateNextPosition()
         {
             Transform cameraTransform = Camera.main.transform;
-            Vector3 localOffset = new Vector3(-0.4f, 0.1f, 1f);
+            Vector3 localOffset = new Vector3(-0.3f, 0.1f, 1.5f);
 
             if (instantiatedItems.Count == 0)
             {
@@ -103,10 +103,10 @@ namespace WebViewStream
             RectTransform rectTransform = item.GetComponent<RectTransform>();
             if (rectTransform != null)
             {
-                return rectTransform.rect.width * rectTransform.lossyScale.x + 0.2f;
+                return rectTransform.rect.width * rectTransform.lossyScale.x;
             }
 
-            return 0.8f;
+            return 0.6f;
         }
 
         /// <summary>

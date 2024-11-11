@@ -4,6 +4,8 @@ using Microsoft.MixedReality.Toolkit.UI;
 using UnityEngine;
 using UnityEngine.Windows.WebCam;
 #if WINDOWS_UWP && !UNITY_EDITOR
+using System.Collections;
+using System.Threading.Tasks;
 using Windows.Storage;
 #endif
 
