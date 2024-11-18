@@ -48,28 +48,6 @@ namespace WebViewStream
             return null;
         }
 
-        private List<IPAddress> GetRoutableLocalIPs()
-        {
-            List<IPAddress> localIPs = new List<IPAddress>();
-
-            foreach (IPAddress local in Dns.GetHostEntry(Dns.GetHostName()).AddressList)
-            {
-                if (local.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    byte[] bytes = local.GetAddressBytes();
-                    if (bytes[0] == 169 && bytes[1] == 254)
-                    {
-                        Debug.Log($"Skipping non-routable address: {local}");
-                        continue;
-                    }
-
-                    localIPs.Add(local);
-                }
-            }
-
-            return localIPs;
-        }
-
         /// <summary>
         /// Starts listening for mDNS service announcements.
         /// </summary>
