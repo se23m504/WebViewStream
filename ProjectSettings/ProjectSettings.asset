@@ -676,6 +676,7 @@ PlayerSettings:
   syncCapabilities: 1
   platformCapabilities:
     WindowsStoreApps:
+      VideosLibrary: True
       GazeInput: True
       SpatialPerception: True
       InternetClient: True

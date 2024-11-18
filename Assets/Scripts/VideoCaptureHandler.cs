@@ -142,7 +142,11 @@ namespace WebViewStream
             }
         }
 
+#if WINDOWS_UWP && !UNITY_EDITOR
+        private async void OnStartedVideoCaptureMode(VideoCapture.VideoCaptureResult result)
+#else
         private void OnStartedVideoCaptureMode(VideoCapture.VideoCaptureResult result)
+#endif
         {
             if (result.success)
             {
@@ -150,7 +154,12 @@ namespace WebViewStream
                     "WebView_{0}.mp4",
                     DateTime.UtcNow.ToString("yyyy-MM-ddTHHmmssZ")
                 );
+#if WINDOWS_UWP && !UNITY_EDITOR
+                StorageLibrary videosLibrary = await StorageLibrary.GetLibraryAsync(KnownLibraryId.Videos);
+                string filepath = Path.Combine(videosLibrary.SaveFolder.Path, filename);
+#else
                 string filepath = Path.Combine(Application.persistentDataPath, filename);
+#endif
                 Debug.Log("Saving video to: " + filepath);
 
                 videoCapture.StartRecordingAsync(filepath, OnStartedRecordingVideo);
