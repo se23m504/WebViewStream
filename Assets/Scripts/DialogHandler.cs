@@ -28,9 +28,9 @@ namespace WebViewStream
             if (dialog != null)
             {
                 Follow follow = dialog.GetComponent<Follow>();
-                follow.MinDistance = 0.5f;
-                follow.DefaultDistance = 0.5f;
-                follow.MaxDistance = 0.5f;
+                follow.MinDistance = 0.45f;
+                follow.DefaultDistance = 0.45f;
+                follow.MaxDistance = 0.45f;
 
                 dialog.OnClosed += (x) =>
                 {

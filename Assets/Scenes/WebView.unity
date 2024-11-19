@@ -19952,9 +19952,9 @@ MonoBehaviour:
   faceUserDefinedTargetTransform: 0
   targetToFace: {fileID: 0}
   pivotAxis: 7
-  minDistance: 0.55
-  maxDistance: 0.55
-  defaultDistance: 0.55
+  minDistance: 0.5
+  maxDistance: 0.5
+  defaultDistance: 0.5
   maxViewHorizontalDegrees: 30
   maxViewVerticalDegrees: 20
   reorientWhenOutsideParameters: 1
