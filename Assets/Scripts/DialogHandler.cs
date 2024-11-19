@@ -1,5 +1,6 @@
 using System;
 using Microsoft.MixedReality.Toolkit.UI;
+using Microsoft.MixedReality.Toolkit.Utilities.Solvers;
 using UnityEngine;
 
 namespace WebViewStream
@@ -26,6 +27,11 @@ namespace WebViewStream
             );
             if (dialog != null)
             {
+                Follow follow = dialog.GetComponent<Follow>();
+                follow.MinDistance = 0.5f;
+                follow.DefaultDistance = 0.5f;
+                follow.MaxDistance = 0.5f;
+
                 dialog.OnClosed += (x) =>
                 {
                     if (x.Result == DialogButtonType.Yes)
