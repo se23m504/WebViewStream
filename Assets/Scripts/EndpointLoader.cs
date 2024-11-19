@@ -70,14 +70,15 @@ namespace WebViewStream
         {
             Transform cameraTransform = Camera.main.transform;
             Vector3 localOffset = new Vector3(-0.3f, 0.1f, 1.5f);
+            int count = instantiatedItems.Count;
 
-            if (instantiatedItems.Count == 0)
+            if (count == 0)
             {
                 return cameraTransform.position + cameraTransform.TransformDirection(localOffset);
             }
 
-            GameObject lastItem = instantiatedItems[instantiatedItems.Count - 1];
-            localOffset = new Vector3(localOffset.x + GetItemWidth(lastItem), localOffset.y, localOffset.z);
+            GameObject lastItem = instantiatedItems[count - 1];
+            localOffset = new Vector3(localOffset.x + GetItemWidth(lastItem) * count, localOffset.y, localOffset.z);
             return cameraTransform.position + cameraTransform.TransformDirection(localOffset);
         }
 
